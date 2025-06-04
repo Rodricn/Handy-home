@@ -5,9 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Formulário</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -141,6 +139,17 @@
     button[type="submit"]:hover, .back-btn:hover {
       background-color: #1a2b4c;
     }
+
+    .dropdown-display {
+      color: #666;
+      font-style: italic;
+    }
+
+    .dropdown-display.selected {
+      color: #0f2137;
+      font-style: normal;
+      font-weight: 500;
+    }
   </style>
 </head>
 <body>
@@ -151,13 +160,13 @@
       <div class="form-group">
         <label>1. Categoria</label>
         <div class="dropdown-multi" id="dropdown-categoria">
-          Selecione Categorias
+          <span class="dropdown-display">Selecione Categoria</span>
           <div class="dropdown-options" onclick="event.stopPropagation()">
-            <label><input type="checkbox" name="categoria[]" value="Canalização"> Canalização</label>
-            <label><input type="checkbox" name="categoria[]" value="Eletricidade"> Eletricidade</label>
-            <label><input type="checkbox" name="categoria[]" value="Limpeza"> Limpeza</label>
-            <label><input type="checkbox" name="categoria[]" value="Jardinagem"> Jardinagem</label>
-            <label><input type="checkbox" name="categoria[]" value="Segurança"> Segurança</label>
+            <label><input type="radio" name="categoria" value="Canalização"> Canalização</label>
+            <label><input type="radio" name="categoria" value="Eletricidade"> Eletricidade</label>
+            <label><input type="radio" name="categoria" value="Limpeza"> Limpeza</label>
+            <label><input type="radio" name="categoria" value="Jardinagem"> Jardinagem</label>
+            <label><input type="radio" name="categoria" value="Segurança"> Segurança</label>
           </div>
         </div>
       </div>
@@ -166,7 +175,7 @@
       <div class="form-group">
         <label>2. Zona de Atendimento</label>
         <div class="dropdown-multi" id="dropdown-zona">
-          Selecione Zonas
+          <span class="dropdown-display">Selecione Zonas</span>
           <div class="dropdown-options" onclick="event.stopPropagation()">
             <label><input type="checkbox" name="zona[]" value="Lisboa"> Lisboa</label>
             <label><input type="checkbox" name="zona[]" value="Porto"> Porto</label>
@@ -186,7 +195,7 @@
       <div class="form-group">
         <label>3. Dias da semana</label>
         <div class="dropdown-multi" id="dropdown-dias">
-          Selecione Dias
+          <span class="dropdown-display">Selecione Dias</span>
           <div class="dropdown-options" onclick="event.stopPropagation()">
             <label><input type="checkbox" name="dias[]" value="Segunda-feira"> Segunda-feira</label>
             <label><input type="checkbox" name="dias[]" value="Terça-feira"> Terça-feira</label>
@@ -203,7 +212,7 @@
       <div class="form-group">
         <label>4. Horário de Atendimento</label>
         <div class="dropdown-multi" id="dropdown-horario">
-          Selecione Horários
+          <span class="dropdown-display">Selecione Horários</span>
           <div class="dropdown-options" onclick="event.stopPropagation()">
             <label><input type="checkbox" name="horario[]" value="08:00 - 10:00"> 08:00 - 10:00</label>
             <label><input type="checkbox" name="horario[]" value="10:00 - 12:00"> 10:00 - 12:00</label>
@@ -236,41 +245,95 @@
     </form>
   </div>
 
-  <script>
-    const dropdowns = document.querySelectorAll(".dropdown-multi");
+<script>
+  const dropdowns = document.querySelectorAll(".dropdown-multi");
 
-    dropdowns.forEach(dropdown => {
-      dropdown.addEventListener("click", function (e) {
-        if (!e.target.closest(".dropdown-options")) {
-          this.classList.toggle("open");
-        }
-      });
-    });
+  // Função para atualizar o display dos dropdowns
+  function updateDropdownDisplay(dropdown) {
+    const display = dropdown.querySelector('.dropdown-display');
+    const checkboxes = dropdown.querySelectorAll('input[type="checkbox"]:checked');
+    const radio = dropdown.querySelector('input[type="radio"]:checked');
+    
+    if (radio) {
+      // Para categoria (radio button)
+      display.textContent = radio.value;
+      display.classList.add('selected');
+    } else if (checkboxes.length > 0) {
+      // Para múltiplas seleções (checkboxes)
+      const values = Array.from(checkboxes).map(cb => cb.value);
+      display.textContent = values.join(', ');
+      display.classList.add('selected');
+    } else {
+      // Nenhuma seleção
+      const originalText = dropdown.id === 'dropdown-categoria' ? 'Selecione Categoria' :
+                          dropdown.id === 'dropdown-zona' ? 'Selecione Zonas' :
+                          dropdown.id === 'dropdown-dias' ? 'Selecione Dias' :
+                          'Selecione Horários';
+      display.textContent = originalText;
+      display.classList.remove('selected');
+    }
+  }
 
-    window.addEventListener("click", function (e) {
-      dropdowns.forEach(dropdown => {
-        if (!dropdown.contains(e.target)) {
-          dropdown.classList.remove("open");
-        }
-      });
-    });
-
-    document.getElementById("formulario").addEventListener("submit", function(event) {
-      event.preventDefault();
-
-      const checkedCategorias = document.querySelectorAll("input[name='categoria[]']:checked").length;
-      const checkedZonas = document.querySelectorAll("input[name='zona[]']:checked").length;
-      const checkedDias = document.querySelectorAll("input[name='dias[]']:checked").length;
-      const checkedHorario = document.querySelectorAll("input[name='horario[]']:checked").length;
-      const descricao = document.getElementById("descricao").value.trim();
-      const termosAceitos = document.getElementById("termos").checked;
-
-      if (checkedCategorias && checkedZonas && checkedDias && checkedHorario && descricao && termosAceitos) {
-        window.location.href = 'menuFornecedor.html';
-      } else {
-        alert('Por favor, preencha todos os campos obrigatórios antes de submeter.');
+  // Event listeners para os dropdowns
+  dropdowns.forEach(dropdown => {
+    dropdown.addEventListener("click", function (e) {
+      if (!e.target.closest(".dropdown-options")) {
+        this.classList.toggle("open");
       }
     });
-  </script>
+
+    // Event listeners para inputs dentro dos dropdowns
+    const inputs = dropdown.querySelectorAll('input');
+    inputs.forEach(input => {
+      input.addEventListener('change', () => {
+        updateDropdownDisplay(dropdown);
+      });
+    });
+  });
+
+  // Fechar dropdowns ao clicar fora
+  window.addEventListener("click", function (e) {
+    dropdowns.forEach(dropdown => {
+      if (!dropdown.contains(e.target)) {
+        dropdown.classList.remove("open");
+      }
+    });
+  });
+
+  // Submit do formulário
+  document.getElementById("formulario").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const categoriaSelecionada = document.querySelector("input[name='categoria']:checked");
+    const zonasSelecionadas = Array.from(document.querySelectorAll("input[name='zona[]']:checked")).map(cb => cb.value);
+    const diasSelecionados = Array.from(document.querySelectorAll("input[name='dias[]']:checked")).map(cb => cb.value);
+    const horariosSelecionados = Array.from(document.querySelectorAll("input[name='horario[]']:checked")).map(cb => cb.value);
+    const descricao = document.getElementById("descricao").value.trim();
+    const termosAceitos = document.getElementById("termos").checked;
+
+    if (categoriaSelecionada && zonasSelecionadas.length && diasSelecionados.length && horariosSelecionados.length && descricao && termosAceitos) {
+      const servico = {
+        categoria: categoriaSelecionada.value,
+        zonas: zonasSelecionadas,
+        dias: diasSelecionados,
+        horarios: horariosSelecionados,
+        descricao: descricao,
+        status: 'ativo',
+        dataRegistro: new Date().toISOString()
+      };
+
+      // Guarda no localStorage
+      const servicos = JSON.parse(localStorage.getItem("servicos") || "[]");
+      servicos.push(servico);
+      localStorage.setItem("servicos", JSON.stringify(servicos));
+
+      // Redireciona para servicosFornecedor.html
+      window.location.href = 'servicosFornecedor.html';
+    } else {
+      alert('Por favor, preencha todos os campos obrigatórios antes de submeter.');
+    }
+  });
+</script>
+
 </body>
 </html>

@@ -147,6 +147,7 @@
     }
     .service-info p {
       font-size: 14px; color: #666;
+      margin-bottom: 3px;
     }
     .status {
       position: absolute; top: 24px; right: 24px;
@@ -210,6 +211,39 @@
     .modal-content .btn-action {
       background-color: #0f2137; color: white;
     }
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+    }
+    .empty-state h3 {
+      margin-bottom: 15px;
+      font-size: 20px;
+    }
+    .empty-state p {
+      margin-bottom: 25px;
+      font-size: 16px;
+    }
+    .empty-state button {
+      background-color: #0f2137;
+      color: white;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .service-details {
+      font-size: 13px;
+      color: #555;
+      margin-top: 5px;
+    }
+    .service-details span {
+      display: inline-block;
+      margin-right: 15px;
+      margin-bottom: 3px;
+    }
   </style>
 </head>
 <body>
@@ -247,8 +281,8 @@
 
   <div class="tabs">
     <button class="tab-btn">Meus Serviços</button>
-    <button class="tab-btn" onclick="window.location.href='servicosAceites.html'">Serviços Aceites</button>
-    <button class="tab-btn" onclick="window.location.href='servicosRealizados.html'">Serviços Realizados</button>
+    <button class="tab-btn" onclick="alert('Funcionalidade em desenvolvimento')">Serviços Aceites</button>
+    <button class="tab-btn" onclick="alert('Funcionalidade em desenvolvimento')">Serviços Realizados</button>
   </div>
 
   <div id="cards-container"></div>
@@ -256,16 +290,16 @@
   <div class="modal-overlay" id="modal">
     <div class="modal-content">
       <h3>O que deseja fazer?</h3>
-      <button class="btn-action" onclick="window.location.href='formulario.html'">Alterar Informações</button>
+      <button class="btn-action" onclick="editarServico()">Alterar Informações</button>
       <button class="btn-action" id="toggleBtn">Ativar/Desativar</button>
       <button class="btn-close" onclick="closeModal()">Cancelar</button>
     </div>
   </div>
 
   <div class="footer-controls">
-    <div class="pagination">1</div>
+    <div class="pagination" id="pagination">1</div>
   </div>
-  <button onclick="window.location.href='menuFornecedor.html'" class="menu-button">Menu</button>
+  <button onclick="adicionarNovoServico()" class="menu-button">Adicionar Serviço</button>
 
   <script>
     const avatarBtn = document.getElementById('avatarBtn');
@@ -285,80 +319,203 @@
       window.location.href = 'paginaInicial.html';
     });
 
-    const services = [
-      {
-        titulo: 'Serviço - Eletricidade',
-        local: 'Aveiro, Aveiro',
-        status: 'ativo',
-        img: 'PNG/Eletricidade.png',
-        descricao: 'Instalação e manutenção de sistemas elétricos residenciais...'
-      },
-      {
-        titulo: 'Serviço - Canalização',
-        local: 'Aveiro, Aveiro',
-        status: 'inativo',
-        img: 'PNG/Canalização.png',
-        descricao: 'Reparações de canos, desentupimentos e instalação...'
-      }
-    ];
+    // Função para obter imagem da categoria
+    function getCategoryImage(categoria) {
+      const images = {
+        'Eletricidade': 'PNG/Eletricidade.png',
+        'Canalização': 'PNG/Canalização.png',
+        'Limpeza': 'PNG/Limpeza.png',
+        'Jardinagem': 'PNG/Jardinagem.png',
+        'Segurança': 'PNG/Segurança.png'
+      };
+      return images[categoria] || 'PNG/Default.png';
+    }
 
-    const container = document.getElementById('cards-container');
-    let currentCard = null;
-
-    services.forEach((s) => {
-      const card = document.createElement('div');
-      card.className = 'service-card';
-      card.innerHTML = `
-        <span class="status ${s.status}">${s.status.charAt(0).toUpperCase() + s.status.slice(1)}</span>
-        <div class="card-header">
-          <img src="${s.img}" alt="${s.titulo}">
-          <div class="service-info">
-            <h3>${s.titulo}</h3>
-            <p>Localização 📍 - ${s.local}</p>
+    // Função para carregar e exibir serviços
+    function loadServices() {
+      const container = document.getElementById('cards-container');
+      const servicos = JSON.parse(localStorage.getItem('servicos') || '[]');
+      
+      // Limpar container
+      container.innerHTML = '';
+      
+      if (servicos.length === 0) {
+        // Estado vazio
+        container.innerHTML = `
+          <div class="empty-state">
+            <h3>Nenhum serviço cadastrado</h3>
+            <p>Você ainda não possui serviços cadastrados. Clique no botão abaixo para adicionar seu primeiro serviço.</p>
+            <button onclick="adicionarNovoServico()">Adicionar Primeiro Serviço</button>
           </div>
-        </div>
-        <div class="actions">
-          <button class="btn-azul" onclick="openModal(this)">Alterar</button>
-          <button class="btn-azul" onclick="toggleDescricao(this)">Ver detalhes</button>
-          <button class="btn-vermelho" onclick="removerServico(this)">Apagar</button>
-        </div>
-        <div class="descricao">${s.descricao}</div>
-      `;
-      container.appendChild(card);
-    });
+        `;
+        return;
+      }
+
+      // Criar cards para cada serviço
+      servicos.forEach((servico, index) => {
+        const card = document.createElement('div');
+        card.className = 'service-card';
+        card.dataset.index = index;
+        
+        // Formattar informações do serviço
+        const zonas = Array.isArray(servico.zonas) ? servico.zonas.join(', ') : servico.zonas || 'Não especificado';
+        const dias = Array.isArray(servico.dias) ? servico.dias.join(', ') : servico.dias || 'Não especificado';
+        const horarios = Array.isArray(servico.horarios) ? servico.horarios.join(', ') : servico.horarios || 'Não especificado';
+        
+        card.innerHTML = `
+          <span class="status ${servico.status || 'ativo'}">${(servico.status || 'ativo').charAt(0).toUpperCase() + (servico.status || 'ativo').slice(1)}</span>
+          <div class="card-header">
+            <img src="${getCategoryImage(servico.categoria)}" alt="${servico.categoria}">
+            <div class="service-info">
+              <h3>Serviço - ${servico.categoria}</h3>
+              <p>📍 Zonas: ${zonas}</p>
+              <div class="service-details">
+                <span>📅 ${dias}</span>
+                <span>🕐 ${horarios}</span>
+              </div>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn-azul" onclick="openModal(this)">Alterar</button>
+            <button class="btn-azul" onclick="toggleDescricao(this)">Ver detalhes</button>
+            <button class="btn-vermelho" onclick="removerServico(this)">Apagar</button>
+          </div>
+          <div class="descricao">
+            <strong>Descrição:</strong><br>
+            ${servico.descricao || 'Sem descrição disponível'}
+            <br><br>
+            <strong>Detalhes do Serviço:</strong><br>
+            <strong>Categoria:</strong> ${servico.categoria}<br>
+            <strong>Zonas de Atendimento:</strong> ${zonas}<br>
+            <strong>Dias Disponíveis:</strong> ${dias}<br>
+            <strong>Horários:</strong> ${horarios}<br>
+            <strong>Status:</strong> ${(servico.status || 'ativo').charAt(0).toUpperCase() + (servico.status || 'ativo').slice(1)}<br>
+            ${servico.dataRegistro ? `<strong>Data de Registro:</strong> ${new Date(servico.dataRegistro).toLocaleDateString('pt-PT')}` : ''}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      // Atualizar paginação
+      document.getElementById('pagination').textContent = `${servicos.length} serviço${servicos.length !== 1 ? 's' : ''}`;
+    }
+
+    let currentCard = null;
+    let currentServiceIndex = null;
 
     function toggleDescricao(button) {
       const descricao = button.closest('.service-card').querySelector('.descricao');
       descricao.classList.toggle('show');
+      button.textContent = descricao.classList.contains('show') ? 'Ocultar detalhes' : 'Ver detalhes';
     }
 
     function openModal(button) {
       currentCard = button.closest('.service-card');
+      currentServiceIndex = parseInt(currentCard.dataset.index);
       document.getElementById('modal').classList.add('active');
     }
 
     function closeModal() {
       document.getElementById('modal').classList.remove('active');
+      currentCard = null;
+      currentServiceIndex = null;
     }
 
     function removerServico(button) {
-      const card = button.closest('.service-card');
-      card.remove();
+      if (confirm('Tem certeza que deseja apagar este serviço? Esta ação não pode ser desfeita.')) {
+        const card = button.closest('.service-card');
+        const index = parseInt(card.dataset.index);
+        
+        // Remover do localStorage
+        const servicos = JSON.parse(localStorage.getItem('servicos') || '[]');
+        servicos.splice(index, 1);
+        localStorage.setItem('servicos', JSON.stringify(servicos));
+        
+        // Recarregar a lista
+        loadServices();
+      }
     }
 
+    function editarServico() {
+      if (currentServiceIndex !== null) {
+        // Salvar o índice do serviço a ser editado
+        localStorage.setItem('editingServiceIndex', currentServiceIndex.toString());
+        // Redirecionar para o formulário (você precisará modificar o formulário para suportar edição)
+        alert('Funcionalidade de edição será implementada em breve. Por enquanto, você pode apagar e criar um novo serviço.');
+      }
+      closeModal();
+    }
+
+    function adicionarNovoServico() {
+      // Simular redirecionamento para o formulário
+      const formHTML = `
+        <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 10000;">
+          <div style="background: white; padding: 30px; border-radius: 10px; text-align: center;">
+            <h3>Adicionar Novo Serviço</h3>
+            <p style="margin: 20px 0;">Para adicionar um novo serviço, você será redirecionado para o formulário de cadastro.</p>
+<button onclick="this.parentElement.parentElement.remove(); window.location.href = 'formulario.html'" style="background: #0f2137; color: white; padding: 10px 20px; border: none; border-radius: 5px; margin-right: 10px; cursor: pointer;">Continuar</button>            <button onclick="this.parentElement.parentElement.remove()" style="background: #ccc; color: black; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Cancelar</button>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', formHTML);
+    }
+
+    // Event listener para o botão toggle
     document.getElementById('toggleBtn').addEventListener('click', () => {
-      const statusSpan = currentCard.querySelector('.status');
-      if (statusSpan.classList.contains('ativo')) {
-        statusSpan.classList.remove('ativo');
-        statusSpan.classList.add('inativo');
-        statusSpan.textContent = 'Inativo';
-      } else {
-        statusSpan.classList.remove('inativo');
-        statusSpan.classList.add('ativo');
-        statusSpan.textContent = 'Ativo';
+      if (currentServiceIndex !== null) {
+        const servicos = JSON.parse(localStorage.getItem('servicos') || '[]');
+        const servico = servicos[currentServiceIndex];
+        
+        // Alternar status
+        servico.status = servico.status === 'ativo' ? 'inativo' : 'ativo';
+        
+        // Salvar no localStorage
+        localStorage.setItem('servicos', JSON.stringify(servicos));
+        
+        // Recarregar a lista
+        loadServices();
       }
       closeModal();
     });
+
+    // Carregar serviços quando a página carregar
+    window.addEventListener('load', loadServices);
+
+    // Função para demonstração - adicionar serviços de exemplo
+    function adicionarServicosExemplo() {
+      const servicosExemplo = [
+        {
+          categoria: 'Eletricidade',
+          zonas: ['Porto', 'Aveiro'],
+          dias: ['Segunda-feira', 'Terça-feira', 'Quarta-feira'],
+          horarios: ['08:00 - 12:00', '14:00 - 18:00'],
+          descricao: 'Instalação e manutenção de sistemas elétricos residenciais e comerciais. Serviço especializado com mais de 10 anos de experiência.',
+          status: 'ativo',
+          dataRegistro: new Date().toISOString()
+        },
+        {
+          categoria: 'Canalização',
+          zonas: ['Lisboa', 'Setúbal'],
+          dias: ['Quinta-feira', 'Sexta-feira', 'Sábado'],
+          horarios: ['09:00 - 17:00'],
+          descricao: 'Reparações de canos, desentupimentos e instalação de sistemas de água e esgoto.',
+          status: 'inativo',
+          dataRegistro: new Date().toISOString()
+        }
+      ];
+      
+      localStorage.setItem('servicos', JSON.stringify(servicosExemplo));
+      loadServices();
+    }
+
+    // Botão para adicionar serviços de exemplo (remover em produção)
+    if (JSON.parse(localStorage.getItem('servicos') || '[]').length === 0) {
+      const exemploBtn = document.createElement('button');
+      exemploBtn.textContent = 'Adicionar Serviços de Exemplo';
+      exemploBtn.style.cssText = 'position: fixed; top: 10px; left: 10px; background: #007bff; color: white; padding: 8px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; z-index: 1000;';
+      exemploBtn.onclick = adicionarServicosExemplo;
+      document.body.appendChild(exemploBtn);
+    }
   </script>
 </body>
 </html>
