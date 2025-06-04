@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Marcação - EDP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet"/>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f9f9f9;
+      color: #1a2e47;
+    }
+
+    /* NOVA NAVBAR */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #c9c9c9;
+      padding: 15px 30px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      position: relative;
+      z-index: 1000;
+    }
+
+    .navbar .search {
+      display: flex;
+      align-items: center;
+      background: #fff;
+      border-radius: 20px;
+      padding: 6px 12px;
+      border: 1px solid #060707;
+      box-shadow: 0 1px 4px rgba(96, 165, 250, 0.2);
+      max-width: 300px;
+      flex: 1;
+    }
+
+    .navbar input {
+      border: none;
+      outline: none;
+      background: transparent;
+      margin-right: 10px;
+      flex: 1;
+    }
+
+    .navbar nav {
+      display: flex;
+      gap: 25px;
+      font-size: 14px;
+      color: #1a2e47;
+      font-weight: 600;
+      flex: 2;
+      justify-content: center;
+    }
+
+    .navbar nav span {
+      cursor: pointer;
+    }
+
+    .navbar .icons {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex: 1;
+      justify-content: flex-end;
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .icon-btn img {
+      width: 24px;
+      height: 24px;
+    }
+
+    .menu-container {
+      position: relative;
+      display: inline-block;
+      user-select: none;
+    }
+
+    .avatar {
+      cursor: pointer;
+      font-weight: 600;
+      color: white;
+      background-color: #1a2e47;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.1rem;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 110%;
+      right: 0;
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      min-width: 200px;
+      padding: 0.5rem 0;
+      font-weight: 400;
+      color: #1a2e47;
+      z-index: 1001 !important;
+    }
+
+    .dropdown-menu.active {
+      display: block;
+    }
+
+    .dropdown-menu div {
+      padding: 0.6rem 1.2rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color 0.15s ease;
+    }
+
+    .dropdown-menu div:hover {
+      background-color: #e0e0e0;
+    }
+
+    /* RESTO DO ESTILO (calendário, modal, etc) */
+    .wrapper {
+      max-width: 1100px;
+      margin: 3rem auto;
+      padding: 0 2rem;
+    }
+
+    .instructions {
+      background: #0c2549;
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .booking-container {
+      display: flex;
+      gap: 3rem;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    #calendar {
+      flex: 0 0 350px;
+      background-color: #e0e0e0;
+      padding: 1rem;
+      border-radius: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .details {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .details h3 {
+      margin-top: 0;
+      font-size: 1.2rem;
+    }
+
+    .hours {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin: 1rem 0;
+    }
+
+    .hour-btn {
+      padding: 0.75rem 1.5rem;
+      border: 1px solid #1a2e47;
+      background: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .hour-btn.active {
+      background: #0c2549;
+      color: white;
+    }
+
+    .summary {
+      margin-top: 1rem;
+      line-height: 1.8;
+    }
+
+    .confirm-btn {
+      margin-top: 2rem;
+      padding: 1rem 2rem;
+      font-size: 1rem;
+      background-color: #0c2549;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .alert {
+      color: red;
+      margin-top: 0.5rem;
+      font-weight: bold;
+    }
+
+    .fc-day-today {
+      background-color: #d3d3d3 !important;
+      color: #1a2e47 !important;
+      border-radius: 6px;
+    }
+
+    .fc-day-selected {
+      background-color: #0c2549 !important;
+      color: #dcdcdc !important;
+      border-radius: 6px;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility 0s, opacity 0.3s ease-in-out;
+    }
+
+    .modal-overlay.active {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 2rem 3rem;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      max-width: 400px;
+      width: 90%;
+      transform: translateY(20px);
+      transition: transform 0.3s ease-out;
+    }
+
+    .modal-overlay.active .modal-content {
+      transform: translateY(0);
+    }
+
+    .modal-content h2 {
+      margin-bottom: 1rem;
+      color: #0c2549;
+    }
+
+    .modal-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .modal-buttons button {
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .modal-buttons .btn-menu {
+      background-color: #f0f0f0;
+      color: #1a2e47;
+      border: 1px solid #ccc;
+    }
+
+    .modal-buttons .btn-menu:hover {
+      background-color: #e0e0e0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NOVA NAVBAR -->
+  <div class="navbar">
+    <div class="search">
+      <input type="text" placeholder="Pesquisar..." />
+      <span onclick="this.previousElementSibling.value = ''">✕</span>
+    </div>
+    <nav>
+      <span>Como funciona</span>
+      <span>Para clientes</span>
+      <span>Para fornecedores</span>
+      <span>Preços</span>
+      <span>Sobre nós</span>
+    </nav>
+    <div class="icons">
+      <button class="icon-btn" aria-label="Notificações">
+        <img src="https://img.icons8.com/ios-filled/50/bell.png" alt="Notificações" />
+      </button>
+      <div class="menu-container" id="menuContainer">
+        <div class="avatar" id="avatarBtn">F</div>
+        <div class="dropdown-menu" id="dropdownMenu">
+          <div id="pagamentosPendentes">Pagamentos pendentes</div>
+          <div id="confirmarServico">Confirmação de serviços</div>
+          <div id="planos">Planos de subscrição</div>
+          <div id="suporte">Suporte</div>
+          <div id="logout">Logout</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTEÚDO DO CALENDÁRIO -->
+  <div class="wrapper">
+    <div class="instructions">
+      Selecione a data e o horário no qual pretende fazer a marcação
+    </div>
+    <div class="booking-container">
+      <div id="calendar"></div>
+      <div class="details">
+        <h3 id="selectionTitle">Selecione uma data:</h3>
+        <div class="hours" id="hourOptions" style="display: none;">
+          <button class="hour-btn">09:00</button>
+          <button class="hour-btn">10:00</button>
+          <button class="hour-btn">14:00</button>
+          <button class="hour-btn">16:30</button>
+        </div>
+        <div class="alert" id="alert"></div>
+        <div class="summary" id="summary" style="display: none;">
+          <div>⚡ Eletricidade</div>
+          <div>⏱️ 1 - 2 horas</div>
+          <div>💶 50 - 150 €</div>
+          <div>👷 EDP</div>
+        </div>
+        <button class="confirm-btn" id="confirmBtn" style="display: none;">Confirmar marcação</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="confirmationModal">
+    <div class="modal-content">
+      <h2>Pedido de marcação realizado com sucesso!</h2>
+      <p>O seu pedido foi enviado e em breve o fornecedor responderá.</p>
+      <div class="modal-buttons">
+        <button class="btn-menu" id="closeModalBtn">Menu</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const calendarEl = document.getElementById('calendar');
+      const modal = document.getElementById('confirmationModal');
+      const confirmBtn = document.getElementById('confirmBtn');
+      const alertBox = document.getElementById('alert');
+      const selectionTitle = document.getElementById('selectionTitle');
+      const closeModalBtn = document.getElementById('closeModalBtn');
+
+      let selectedDate = '';
+      let selectedHour = '';
+
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        selectable: true,
+        height: 'auto',
+        fixedWeekCount: false,
+        headerToolbar: { left: 'title', right: 'prev,next' },
+        dateClick: function (info) {
+          selectedDate = info.dateStr;
+          selectedHour = '';
+          document.querySelectorAll('.fc-day-selected').forEach(day => day.classList.remove('fc-day-selected'));
+          info.dayEl.classList.add('fc-day-selected');
+          document.getElementById('hourOptions').style.display = 'flex';
+          document.getElementById('summary').style.display = 'block';
+          confirmBtn.style.display = 'inline-block';
+          alertBox.textContent = '';
+          document.querySelectorAll('.hour-btn').forEach(btn => btn.classList.remove('active'));
+          selectionTitle.textContent = 'Escolha um horário:';
+        }
+      });
+
+      calendar.render();
+
+      document.querySelectorAll('.hour-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+          const alreadyActive = this.classList.contains('active');
+          document.querySelectorAll('.hour-btn').forEach(b => b.classList.remove('active'));
+          if (!alreadyActive) {
+            this.classList.add('active');
+            selectedHour = this.textContent;
+            alertBox.textContent = '';
+          } else {
+            selectedHour = '';
+          }
+        });
+      });
+
+      confirmBtn.addEventListener('click', function () {
+        if (!selectedHour || !selectedDate) {
+          alertBox.textContent = 'Por favor selecione uma data e um horário.';
+        } else {
+          modal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+      });
+
+      closeModalBtn.addEventListener('click', function () {
+        window.location.href = 'menuClientes.html';
+      });
+
+      // Dropdown menu funcionalidade
+      const avatarBtn = document.getElementById('avatarBtn');
+      const dropdownMenu = document.getElementById('dropdownMenu');
+
+      avatarBtn.addEventListener('click', () => {
+        dropdownMenu.classList.toggle('active');
+      });
+
+      window.addEventListener('click', (e) => {
+        if (!avatarBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+          dropdownMenu.classList.remove('active');
+        }
+      });
+
+      document.getElementById('pagamentosPendentes')?.addEventListener('click', () => {
+        window.location.href = 'pagamentosPendentes.html';
+      });
+
+      document.getElementById('confirmarServico')?.addEventListener('click', () => {
+        window.location.href = 'confirmarServico.html';
+      });
+
+      document.getElementById('planos de subscrição')?.addEventListener('click', () => {
+        window.location.href = 'planosSubscricao.html';
+      });
+
+      document.getElementById('suporte')?.addEventListener('click', () => {
+        window.location.href = 'suporte.html';
+      });
+
+      document.getElementById('logout')?.addEventListener('click', () => {
+        window.location.href = 'paginaInicial.html';
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pedidos Pendentes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f3f3f3;
+      color: #1a2e47;
+      min-height: 100vh;
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #c9c9c9;
+      padding: 15px 30px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .navbar .search {
+      display: flex;
+      align-items: center;
+      background: #fff;
+      border-radius: 20px;
+      padding: 6px 12px;
+      border: 1px solid #060707;
+      box-shadow: 0 1px 4px rgba(96, 165, 250, 0.2);
+      max-width: 300px;
+      flex: 1;
+    }
+
+    .navbar input {
+      border: none;
+      outline: none;
+      background: transparent;
+      margin-right: 10px;
+      flex: 1;
+    }
+
+    .navbar nav {
+      display: flex;
+      gap: 25px;
+      font-size: 14px;
+      color: #1a2e47;
+      font-weight: 600;
+      flex: 2;
+      justify-content: center;
+    }
+
+    .navbar nav span {
+      cursor: pointer;
+    }
+
+    .navbar .icons {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex: 1;
+      justify-content: flex-end;
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .icon-btn img {
+      width: 24px;
+      height: 24px;
+    }
+
+    .menu-container {
+      position: relative;
+      display: inline-block;
+      user-select: none;
+    }
+
+    .avatar {
+      cursor: pointer;
+      font-weight: 600;
+      color: white;
+      background-color: #1a2e47;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.1rem;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 110%;
+      right: 0;
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      min-width: 200px;
+      z-index: 10;
+      padding: 0.5rem 0;
+      font-weight: 400;
+      color: #1a2e47;
+    }
+
+    .dropdown-menu.active {
+      display: block;
+    }
+
+    .dropdown-menu div {
+      padding: 0.6rem 1.2rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color 0.15s ease;
+    }
+
+    .dropdown-menu div:hover {
+      background-color: #e0e0e0;
+    }
+
+    .page-title {
+      max-width: 1100px;
+      margin: 40px auto 20px;
+      padding: 0 20px;
+      font-size: 22px;
+      font-weight: bold;
+      color: #0f2137;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin: 20px 0;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .user-info img {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background-color: #ddd;
+    }
+
+    .user-info div {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .user-info h4 {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .user-info p {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .actions button {
+      padding: 6px 14px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      font-weight: bold;
+      background-color: #0f2137;
+      color: white;
+    }
+
+    .details {
+      margin-top: 10px;
+      background-color: #f0f0f0;
+      padding: 12px;
+      border-radius: 6px;
+      display: none;
+      font-size: 14px;
+    }
+
+    .details.show {
+      display: block;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 50px 0 80px;
+      gap: 8px;
+      font-weight: bold;
+    }
+
+    .pagination span {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      background-color: #e0e0e0;
+      color: #1a2e47;
+    }
+
+    .pagination span.active {
+      background-color: #0f2137;
+      color: white;
+    }
+
+    .menu-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #0f2137;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar Atualizada -->
+  <div class="navbar">
+    <div class="search">
+      <input type="text" placeholder="Pesquisar...">
+      <span>✕</span>
+    </div>
+    <nav>
+      <span>Como funciona</span>
+      <span>Para clientes</span>
+      <span>Para fornecedores</span>
+      <span>Preços</span>
+      <span>Sobre nós</span>
+    </nav>
+    <div class="icons">
+      <button class="icon-btn" aria-label="Notificações">
+        <img src="https://img.icons8.com/ios-filled/50/bell.png" alt="Notificações" />
+      </button>
+      <div class="menu-container" id="menuContainer">
+        <div class="avatar" id="avatarBtn">F</div>
+        <div class="dropdown-menu" id="dropdownMenu">
+          <div onclick="window.location.href='servicosFornecedor.html'">Meus Serviços</div>
+          <div onclick="window.location.href='formulario.html'">Adicionar Serviço</div>
+          <div onclick="window.location.href='servicosAceites.html'">Lista de Serviços</div>
+          <div onclick="window.location.href='servicosPendentes.html'">Gerir Pedidos</div>
+          <div onclick="window.location.href='servicosRealizados.html'">Histórico</div>
+          <div>Suporte</div>
+          <div id="logout">Logout</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-title">Pedidos pendentes</div>
+  <div class="container" id="cards-container"></div>
+
+  <div class="pagination">
+    <span class="active">1</span>
+    <span>2</span>
+    <span>3</span>
+    <span>...</span>
+    <span>6</span>
+    <span>7</span>
+  </div>
+
+  <button onclick="window.location.href='menuFornecedor.html'" class="menu-button">Menu</button>
+
+  <script>
+    const avatarBtn = document.getElementById('avatarBtn');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+
+    avatarBtn.addEventListener('click', () => {
+      dropdownMenu.classList.toggle('active');
+    });
+
+    window.addEventListener('click', (e) => {
+      if (!avatarBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+        dropdownMenu.classList.remove('active');
+      }
+    });
+
+    document.getElementById('logout').addEventListener('click', () => {
+      window.location.href = 'paginaInicial.html';
+    });
+
+    const container = document.getElementById('cards-container');
+    const pedidos = [
+      { nome: "João Ferreira", local: "Aveiro", descricao: "Serviço de eletricidade geral, instalação de tomadas e iluminação." },
+      { nome: "Maria Fernandes", local: "Ílhavo", descricao: "Reparação de canos e substituição de torneiras com urgência." },
+      { nome: "Gabriel Silva", local: "Oliveira do Bairro", descricao: "Instalação de chuveiro novo e substituição de tubagem." },
+      { nome: "Inês Rocha", local: "Mealhada", descricao: "Manutenção de jardim e sistema de rega." },
+      { nome: "Carlos Almeida", local: "Anadia", descricao: "Instalação de alarme e câmaras de segurança." },
+      { nome: "Beatriz Costa", local: "Águeda", descricao: "Serviço de limpeza doméstica completa." },
+      { nome: "Diogo Martins", local: "Viseu", descricao: "Instalação de rede Wi-Fi e reforço de sinal." },
+      { nome: "Ana Marques", local: "Coimbra", descricao: "Pintura de interiores e pequenos reparos domésticos." }
+    ];
+
+    function renderPedido(pedido) {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="top-row">
+          <div class="user-info">
+            <img src="https://img.icons8.com/ios-filled/100/user-male-circle.png" alt="Perfil">
+            <div>
+              <h4>${pedido.nome}</h4>
+              <p>${pedido.local}</p>
+            </div>
+          </div>
+          <div class="actions">
+            <button onclick="confirmar(this, 'aceitar')">Aceitar</button>
+            <button onclick="confirmar(this, 'recusar')">Recusar</button>
+            <button onclick="toggleDetalhes(this)">Ver detalhes</button>
+          </div>
+        </div>
+        <div class="details">${pedido.descricao}</div>
+      `;
+      container.appendChild(card);
+    }
+
+    function toggleDetalhes(btn) {
+      const card = btn.closest('.card');
+      const details = card.querySelector('.details');
+      details.classList.toggle('show');
+    }
+
+    function confirmar(btn, acao) {
+      const card = btn.closest('.card');
+      const nome = card.querySelector('h4').innerText;
+      const confirmacao = confirm(`Tem a certeza que deseja ${acao} o pedido de ${nome}?`);
+      if (confirmacao) {
+        card.remove();
+        if (pedidos.length > 0) {
+          const proximo = pedidos.shift();
+          renderPedido(proximo);
+        }
+      }
+    }
+
+    for (let i = 0; i < 5 && pedidos.length > 0; i++) {
+      renderPedido(pedidos.shift());
+    }
+  </script>
+
+</body>
+</html>

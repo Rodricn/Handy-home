@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Meus Serviços</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f3f3f3;
+      color: #1a2e47;
+      min-height: 100vh;
+    }
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #c9c9c9;
+      padding: 15px 30px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .navbar .search {
+      display: flex;
+      align-items: center;
+      background: #fff;
+      border-radius: 20px;
+      padding: 6px 12px;
+      border: 1px solid #060707;
+      box-shadow: 0 1px 4px rgba(96, 165, 250, 0.2);
+      max-width: 300px;
+      flex: 1;
+    }
+    .navbar input {
+      border: none;
+      outline: none;
+      background: transparent;
+      margin-right: 10px;
+      flex: 1;
+    }
+    .navbar nav {
+      display: flex;
+      gap: 25px;
+      font-size: 14px;
+      color: #1a2e47;
+      font-weight: 600;
+      flex: 2;
+      justify-content: center;
+    }
+    .navbar nav span {
+      cursor: pointer;
+    }
+    .navbar .icons {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex: 1;
+      justify-content: flex-end;
+    }
+    .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+    }
+    .icon-btn img {
+      width: 24px;
+      height: 24px;
+    }
+    .menu-container {
+      position: relative;
+      display: inline-block;
+      user-select: none;
+    }
+    .avatar {
+      cursor: pointer;
+      font-weight: 600;
+      color: white;
+      background-color: #1a2e47;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.1rem;
+    }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 110%;
+      right: 0;
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      min-width: 200px;
+      z-index: 10;
+      padding: 0.5rem 0;
+      font-weight: 400;
+      color: #1a2e47;
+    }
+    .dropdown-menu.active {
+      display: block;
+    }
+    .dropdown-menu div {
+      padding: 0.6rem 1.2rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color 0.15s ease;
+    }
+    .dropdown-menu div:hover {
+      background-color: #e0e0e0;
+    }
+
+    .tabs {
+      display: flex; justify-content: center; margin: 40px 0 30px; gap: 20px;
+    }
+    .tabs button {
+      padding: 10px 25px; border: none; border-radius: 6px;
+      background-color: #e0e0e0; color: #1a2e47; font-weight: 500;
+      cursor: pointer; transition: background-color 0.3s;
+    }
+    .tabs button:first-child {
+      background-color: #0f2137; color: white; cursor: default;
+    }
+    .service-card {
+      background-color: white; border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin: 30px auto; max-width: 800px;
+      padding: 24px; border: 1px solid #ddd;
+      position: relative;
+    }
+    .card-header {
+      display: flex; align-items: center; gap: 20px;
+    }
+    .service-card img {
+      width: 64px; height: 64px; object-fit: contain;
+    }
+    .service-info { flex-grow: 1; }
+    .service-info h3 {
+      margin-bottom: 5px; font-size: 18px;
+    }
+    .service-info p {
+      font-size: 14px; color: #666;
+    }
+    .status {
+      position: absolute; top: 24px; right: 24px;
+      padding: 6px 16px; border-radius: 12px;
+      color: white; font-weight: bold; font-size: 14px;
+    }
+    .status.ativo { background-color: #00cc00; }
+    .status.inativo { background-color: red; }
+    .actions {
+      display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap;
+    }
+    .actions button {
+      padding: 6px 14px; border: none; border-radius: 6px;
+      font-size: 14px; cursor: pointer; font-weight: bold;
+    }
+    .btn-azul { background-color: #0f2137; color: white; }
+    .btn-vermelho { background-color: red; color: white; }
+    .descricao {
+      margin-top: 20px; background-color: #f0f0f0;
+      padding: 15px; border-radius: 8px;
+      font-size: 14px; display: none;
+    }
+    .descricao.show { display: block; }
+    .footer-controls {
+      display: flex; justify-content: center; align-items: center;
+      margin: 40px 0 80px;
+    }
+    .pagination {
+      background-color: #0f2137; color: white;
+      padding: 6px 14px; border-radius: 6px;
+      font-size: 14px;
+    }
+    .menu-button {
+      position: fixed; bottom: 20px; right: 20px;
+      background-color: #0f2137; color: white;
+      padding: 10px 20px; border-radius: 8px;
+      font-weight: bold; border: none; cursor: pointer;
+    }
+    .modal-overlay {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5);
+      display: none; justify-content: center; align-items: center;
+      z-index: 9999;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-content {
+      background-color: white; padding: 2rem 3rem;
+      border-radius: 20px; text-align: center;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      max-width: 400px; width: 90%;
+    }
+    .modal-content button {
+      margin-top: 1rem; padding: 0.5rem 1.5rem;
+      font-size: 1rem; border-radius: 10px;
+      border: none; cursor: pointer;
+    }
+    .modal-content .btn-close {
+      background-color: #ccc; color: #000;
+      margin-right: 10px;
+    }
+    .modal-content .btn-action {
+      background-color: #0f2137; color: white;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="search">
+      <input type="text" placeholder="Pesquisar..." />
+      <span>✕</span>
+    </div>
+    <nav>
+      <span>Como funciona</span>
+      <span>Para clientes</span>
+      <span>Para fornecedores</span>
+      <span>Preços</span>
+      <span>Sobre nós</span>
+    </nav>
+    <div class="icons">
+      <button class="icon-btn" aria-label="Notificações">
+        <img src="https://img.icons8.com/ios-filled/50/bell.png" alt="Notificações" />
+      </button>
+      <div class="menu-container" id="menuContainer">
+        <div class="avatar" id="avatarBtn">F</div>
+        <div class="dropdown-menu" id="dropdownMenu">
+          <div onclick="window.location.href='servicosFornecedor.html'">Meus Serviços</div>
+          <div onclick="window.location.href='formulario.html'">Adicionar Serviço</div>
+          <div onclick="window.location.href='servicosAceites.html'">Lista de Serviços</div>
+          <div onclick="window.location.href='servicosPendentes.html'">Gerir Pedidos</div>
+          <div onclick="window.location.href='servicosRealizados.html'">Histórico</div>
+          <div>Suporte</div>
+          <div id="logout">Logout</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn">Meus Serviços</button>
+    <button class="tab-btn" onclick="window.location.href='servicosAceites.html'">Serviços Aceites</button>
+    <button class="tab-btn" onclick="window.location.href='servicosRealizados.html'">Serviços Realizados</button>
+  </div>
+
+  <div id="cards-container"></div>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal-content">
+      <h3>O que deseja fazer?</h3>
+      <button class="btn-action" onclick="window.location.href='formulario.html'">Alterar Informações</button>
+      <button class="btn-action" id="toggleBtn">Ativar/Desativar</button>
+      <button class="btn-close" onclick="closeModal()">Cancelar</button>
+    </div>
+  </div>
+
+  <div class="footer-controls">
+    <div class="pagination">1</div>
+  </div>
+  <button onclick="window.location.href='menuFornecedor.html'" class="menu-button">Menu</button>
+
+  <script>
+    const avatarBtn = document.getElementById('avatarBtn');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+
+    avatarBtn.addEventListener('click', () => {
+      dropdownMenu.classList.toggle('active');
+    });
+
+    window.addEventListener('click', (e) => {
+      if (!avatarBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+        dropdownMenu.classList.remove('active');
+      }
+    });
+
+    document.getElementById('logout').addEventListener('click', () => {
+      window.location.href = 'paginaInicial.html';
+    });
+
+    const services = [
+      {
+        titulo: 'Serviço - Eletricidade',
+        local: 'Aveiro, Aveiro',
+        status: 'ativo',
+        img: 'PNG/Eletricidade.png',
+        descricao: 'Instalação e manutenção de sistemas elétricos residenciais...'
+      },
+      {
+        titulo: 'Serviço - Canalização',
+        local: 'Aveiro, Aveiro',
+        status: 'inativo',
+        img: 'PNG/Canalização.png',
+        descricao: 'Reparações de canos, desentupimentos e instalação...'
+      }
+    ];
+
+    const container = document.getElementById('cards-container');
+    let currentCard = null;
+
+    services.forEach((s) => {
+      const card = document.createElement('div');
+      card.className = 'service-card';
+      card.innerHTML = `
+        <span class="status ${s.status}">${s.status.charAt(0).toUpperCase() + s.status.slice(1)}</span>
+        <div class="card-header">
+          <img src="${s.img}" alt="${s.titulo}">
+          <div class="service-info">
+            <h3>${s.titulo}</h3>
+            <p>Localização 📍 - ${s.local}</p>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn-azul" onclick="openModal(this)">Alterar</button>
+          <button class="btn-azul" onclick="toggleDescricao(this)">Ver detalhes</button>
+          <button class="btn-vermelho" onclick="removerServico(this)">Apagar</button>
+        </div>
+        <div class="descricao">${s.descricao}</div>
+      `;
+      container.appendChild(card);
+    });
+
+    function toggleDescricao(button) {
+      const descricao = button.closest('.service-card').querySelector('.descricao');
+      descricao.classList.toggle('show');
+    }
+
+    function openModal(button) {
+      currentCard = button.closest('.service-card');
+      document.getElementById('modal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('active');
+    }
+
+    function removerServico(button) {
+      const card = button.closest('.service-card');
+      card.remove();
+    }
+
+    document.getElementById('toggleBtn').addEventListener('click', () => {
+      const statusSpan = currentCard.querySelector('.status');
+      if (statusSpan.classList.contains('ativo')) {
+        statusSpan.classList.remove('ativo');
+        statusSpan.classList.add('inativo');
+        statusSpan.textContent = 'Inativo';
+      } else {
+        statusSpan.classList.remove('inativo');
+        statusSpan.classList.add('ativo');
+        statusSpan.textContent = 'Ativo';
+      }
+      closeModal();
+    });
+  </script>
+</body>
+</html>

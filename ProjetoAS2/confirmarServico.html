@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Confirmação de Serviços</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      color: #1a2e47;
+    }
+    header {
+      background: #c9c9c9;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    }
+    nav {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    nav a {
+      text-decoration: none;
+      color: #1a2e47;
+      font-weight: 500;
+    }
+    .search-bar {
+      position: relative;
+      width: 220px;
+    }
+    .search-bar input[type="text"] {
+      padding: 0.5rem 2.5rem 0.5rem 1rem;
+      border-radius: 20px;
+      border: 1px solid #ccc;
+      width: 100%;
+    }
+    .search-bar .clear-btn {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #999;
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+    .user-section {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .user-section .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      position: relative;
+    }
+    .user-section .icon-btn img {
+      width: 24px;
+      height: 24px;
+    }
+    .user-section .profile-icon {
+      background-color: #1a2e47;
+      color: white;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+    .main-content {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .section-title {
+      color: #1a2e47;
+      font-size: 1.5rem;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
+    .service-card {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      margin-top: 1.5rem;
+    }
+    .service-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .service-info img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .service-details {
+      display: flex;
+      flex-direction: column;
+      max-width: 400px;
+    }
+    .service-details h3 {
+      margin: 0;
+      font-size: 1.2rem;
+      color: #1a2e47;
+      display: flex;
+      align-items: center;
+    }
+    .service-details h3 .verified-icon {
+      width: 18px;
+      height: 18px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+    .service-details p {
+      margin: 0.2rem 0;
+      color: #555;
+      font-size: 0.95rem;
+    }
+    .button-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .status-button {
+      background-color: #00E623;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.2rem;
+      border-radius: 5px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: default;
+    }
+    .action-button {
+      background-color: #1a2e47;
+      color: white;
+      border: none;
+      padding: 0.6rem 1rem;
+      border-radius: 5px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .action-button:hover {
+      background-color: #2a4c6e;
+    }
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility 0s, opacity 0.3s ease-in-out;
+    }
+    .modal-overlay.active {
+      visibility: visible;
+      opacity: 1;
+    }
+    .modal-content {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      max-width: 400px;
+      width: 90%;
+    }
+    .modal-content p {
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+      color: #333;
+    }
+    .modal-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .modal-buttons button {
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .btn-avaliar {
+      background-color: #1a2e47;
+      color: white;
+    }
+    .btn-avaliar:hover {
+      background-color: #2a4c6e;
+    }
+    .btn-menu {
+      background-color: #f0f0f0;
+      color: #1a2e47;
+      border: 1px solid #ccc;
+    }
+    .btn-menu:hover {
+      background-color: #e0e0e0;
+    }
+    #textareaProblem {
+      width: 100%;
+      padding: 0.5rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 0.95rem;
+      resize: vertical;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="search-bar">
+      <input type="text" placeholder="Pesquisar...">
+      <button class="clear-btn">×</button>
+    </div>
+    <nav>
+      <a href="#">Como funciona</a>
+      <a href="#">Para clientes</a>
+      <a href="#">Para fornecedores</a>
+      <a href="#">Preços</a>
+      <a href="#">Sobre nós</a>
+    </nav>
+    <div class="user-section">
+      <button class="icon-btn"><img src="https://img.icons8.com/ios-filled/50/bell.png" alt="Notificações"></button>
+      <div class="profile-icon">F</div>
+    </div>
+  </header>
+
+  <div class="main-content">
+    <h1 class="section-title">Confirmação de serviços</h1>
+    <div class="service-card">
+      <div class="service-info">
+        <img src="PNG/edp.png" alt="Logo EDP">
+        <div class="service-details">
+          <h3>EDP <img src="PNG/blue_check.png" alt="Verificado" class="verified-icon"></h3>
+          <p>Data do serviço - 17/08/2025</p>
+          <p>Serviço - Eletricidade</p>
+          <div class="button-group">
+            <button class="action-button" onclick="showConfirmationModal()">Confirmar realização do serviço</button>
+            <button class="action-button" onclick="showReportModal()">Reportar problema</button>
+          </div>
+        </div>
+      </div>
+      <button class="status-button">Pago</button>
+    </div>
+  </div>
+
+  <!-- Modal de confirmação -->
+  <div class="modal-overlay" id="confirmationModal">
+    <div class="modal-content">
+      <p>Obrigado por nos escolher. Agora pode avaliar o serviço ou ir para o menu para explorar os diversos serviços disponíveis.</p>
+      <div class="modal-buttons">
+        <button class="btn-avaliar" onclick="redirectToAvaliacao()">Avaliar</button>
+        <button class="btn-menu" onclick="redirectToMenu()">Menu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de envio de problema -->
+  <div class="modal-overlay" id="reportProblemModal">
+    <div class="modal-content">
+      <p>Descreva o problema encontrado:</p>
+      <textarea id="textareaProblem" rows="4" placeholder="Descreva o problema..."></textarea>
+      <div class="modal-buttons">
+        <button class="btn-avaliar" onclick="sendProblem()">Enviar</button>
+        <button class="btn-menu" onclick="closeAllModals()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de sucesso -->
+  <div class="modal-overlay" id="reportSuccessModal">
+    <div class="modal-content">
+      <p>A sua mensagem foi recebida, o suporte irá entrar em contacto consigo em breve.</p>
+      <div class="modal-buttons">
+        <button class="btn-menu" onclick="redirectToMenu()">Menu</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showConfirmationModal() {
+      document.getElementById('confirmationModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function showReportModal() {
+      document.getElementById('reportProblemModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function sendProblem() {
+      const text = document.getElementById('textareaProblem').value.trim();
+      if (!text) {
+        alert('Por favor, escreva a descrição do problema.');
+        return;
+      }
+      document.getElementById('reportProblemModal').classList.remove('active');
+      document.getElementById('reportSuccessModal').classList.add('active');
+      document.getElementById('textareaProblem').value = '';
+    }
+
+    function redirectToAvaliacao() {
+      window.location.href = 'avaliacao.html';
+    }
+
+    function redirectToMenu() {
+      window.location.href = 'menuClientes.html';
+    }
+
+    function closeAllModals() {
+      document.querySelectorAll('.modal-overlay').forEach(modal => modal.classList.remove('active'));
+      document.body.style.overflow = '';
+    }
+  </script>
+</body>
+</html>

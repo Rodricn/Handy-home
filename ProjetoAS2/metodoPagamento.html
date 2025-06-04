@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Detalhes do Serviço</title>
+  <style>
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #1a2e47;
+  }
+  header {
+    background: #c9c9c9;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  }
+  nav {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+  nav a {
+    text-decoration: none;
+    color: #1a2e47;
+    font-weight: 500;
+  }
+  .search-bar {
+    position: relative;
+    width: 220px; /* Adjust width as needed */
+  }
+  .search-bar input[type="text"] {
+    padding: 0.5rem 2.5rem 0.5rem 1rem; /* Adjust padding for icon */
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    width: 100%;
+  }
+  .search-bar .clear-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    font-size: 1.2rem;
+  }
+  .user-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .user-section .icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    position: relative;
+  }
+  .user-section .icon-btn img {
+    width: 24px;
+    height: 24px;
+  }
+  .user-section .profile-icon {
+    background-color: #1a2e47; /* Dark blue background */
+    color: white;
+    border-radius: 50%; /* Makes it circular */
+    width: 32px; /* Set width and height for the circle */
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1rem;
+  }
+  .main-content {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  h1 {
+    color: #1a2e47;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+  }
+  .section-title {
+    color: #1a2e47;
+    font-size: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+  .service-details-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .service-details-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.8rem;
+    color: #333;
+    font-size: 1.1rem;
+  }
+  .service-details-list li img {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+  .payment-methods-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  .payment-method-card {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100px;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    position: relative; /* For the animation */
+  }
+  .payment-method-card:hover {
+    border-color: #1e3a5f;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  .payment-method-card img {
+    max-width: 100%;
+    max-height: 60px;
+    object-fit: contain;
+  }
+  .payment-info-text {
+    color: #555;
+    font-size: 0.95rem;
+    margin-top: 0.5rem;
+  }
+  .confirm-button {
+    background-color: #1e3a5f;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 2rem;
+    width: fit-content; /* Adjust width to content */
+    margin-left: auto; /* Push to the right */
+    display: block; /* Required for margin auto to work */
+    opacity: 0; /* Initially hidden */
+    transition: opacity 0.3s ease-in-out;
+  }
+  .payment-method-card.selected {
+    border-color: #007bff; /* Highlighted border color */
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+  }
+  .payment-method-card.selected::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    pointer-events: none; /* Make sure it doesn't interfere with clicks */
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(0, 123, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0); }
+  }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="search-bar">
+      <input type="text" placeholder="Pesquisar...">
+      <button class="clear-btn">×</button>
+    </div>
+    <nav>
+      <a href="#">Como funciona</a>
+      <a href="#">Para clientes</a>
+      <a href="#">Para fornecedores</a>
+      <a href="#">Preços</a>
+      <a href="#">Sobre nós</a>
+    </nav>
+    <div class="user-section">
+      <button class="icon-btn"><img src="https://img.icons8.com/ios-filled/50/bell.png" alt="Notificações"></button>
+      <div class="profile-icon">F</div>
+    </div>
+  </header>
+  <div class="main-content">
+    <h1 class="section-title">Detalhes do serviço:</h1>
+    <ul class="service-details-list">
+      <li><img src="https://img.icons8.com/ios/50/electricity.png" alt="Eletricidade"> Eletricidade</li>
+      <li><img src="https://img.icons8.com/ios/50/time.png" alt="Tempo"> 1 - 2 horas</li>
+      <li><img src="https://img.icons8.com/ios/50/cash.png" alt="Preço"> 100 €</li>
+      <li><img src="https://img.icons8.com/ios/50/user.png" alt="Fornecedor"> EDP</li>
+    </ul>
+    <h1 class="section-title" style="margin-top: 3rem;">Selecione um método de pagamento:</h1>
+    <p class="payment-info-text">O montante pago ficará retido na plataforma até que o serviço seja finalizado e confirmado por ambas as partes.</p>
+    <div class="payment-methods-grid">
+      <div class="payment-method-card" onclick="selectPayment(this)">
+        <img src="PNG/paypal.png" alt="PayPal">
+      </div>
+      <div class="payment-method-card" onclick="selectPayment(this)">
+        <img src="PNG/mbway.png" alt="MB Way">
+      </div>
+      <div class="payment-method-card" onclick="selectPayment(this)">
+        <img src="PNG/skrill.png" alt="Skrill">
+      </div>
+      <div class="payment-method-card" onclick="selectPayment(this)">
+        <img src="PNG/visa.png" alt="Visa">
+      </div>
+    </div>
+    <button class="confirm-button">Confirmar método de pagamento</button>
+  </div>
+  <script>
+  function selectPayment(card) {
+    // Remove 'selected' class from any previously selected card
+    document.querySelectorAll('.payment-method-card').forEach(c => c.classList.remove('selected'));
+    // Add 'selected' class to the clicked card
+    card.classList.add('selected');
+    // Show the confirm button
+    document.querySelector('.confirm-button').style.opacity = 1;
+  }
+
+  // Ao clicar no botão Confirmar, redireciona para menuClientes.html
+  document.querySelector('.confirm-button').addEventListener('click', function() {
+    window.location.href = 'menuClientes.html';
+  });
+  </script>
+</body>
+</html>

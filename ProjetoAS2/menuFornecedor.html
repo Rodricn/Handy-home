@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Para Fornecedores - Handy@Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: url('PNG/fundo.png') no-repeat center center/cover;
+      color: #1a2e47;
+      min-height: 100vh;
+    }
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #c9c9c9;
+      padding: 15px 30px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .navbar .search {
+      display: flex;
+      align-items: center;
+      background: #fff;
+      border-radius: 20px;
+      padding: 6px 12px;
+      border: 1px solid #060707;
+      box-shadow: 0 1px 4px rgba(96, 165, 250, 0.2);
+      max-width: 300px;
+      flex: 1;
+    }
+    .navbar input {
+      border: none;
+      outline: none;
+      background: transparent;
+      margin-right: 10px;
+      flex: 1;
+    }
+    .navbar nav {
+      display: flex;
+      gap: 25px;
+      font-size: 14px;
+      color: #1a2e47;
+      font-weight: 600;
+      flex: 2;
+      justify-content: center;
+    }
+    .navbar nav span {
+      cursor: pointer;
+    }
+    .navbar .icons {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex: 1;
+      justify-content: flex-end;
+    }
+    .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+    }
+    .icon-btn img {
+      width: 24px;
+      height: 24px;
+    }
+    .menu-container {
+      position: relative;
+      display: inline-block;
+      user-select: none;
+    }
+    .avatar {
+      cursor: pointer;
+      font-weight: 600;
+      color: white;
+      background-color: #1a2e47;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.1rem;
+    }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 110%;
+      right: 0;
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      min-width: 200px;
+      z-index: 10;
+      padding: 0.5rem 0;
+      font-weight: 400;
+      color: #1a2e47;
+    }
+    .dropdown-menu.active {
+      display: block;
+    }
+    .dropdown-menu div {
+      padding: 0.6rem 1.2rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color 0.15s ease;
+    }
+    .dropdown-menu div:hover {
+      background-color: #e0e0e0;
+    }
+    .main-content {
+      padding: 60px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 40px;
+      flex-wrap: wrap;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .left-box {
+      background: rgba(0, 0, 0, 0.65);
+      color: white;
+      padding: 60px;
+      border-radius: 20px;
+      flex: 2 1 600px;
+      min-width: 300px;
+      min-height: 600px;
+      font-size: 1.2rem;
+      line-height: 2;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+    .left-box h1 {
+      margin-bottom: 20px;
+      font-size: 28px;
+    }
+    .right-box {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      min-width: 200px;
+      flex: 1 1 250px;
+      align-items: stretch;
+    }
+    .action-button {
+      background-color: white;
+      color: #1a2e47;
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      width: 200px;
+      height: 140px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      font-weight: bold;
+      font-size: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+    .action-button:hover {
+      transform: translateY(-4px);
+    }
+    .action-button img {
+      width: 40px;
+      margin-bottom: 10px;
+      filter: brightness(0) saturate(100%) invert(17%) sepia(16%) saturate(1890%) hue-rotate(184deg) brightness(95%) contrast(90%);
+    }
+    @media (max-width: 900px) {
+      .main-content {
+        flex-direction: column;
+        align-items: center;
+      }
+      .left-box, .right-box {
+        width: 100%;
+      }
+      .right-box {
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="search">
+      <input type="text" placeholder="Pesquisar..." />
+      <span>✕</span>
+    </div>
+    <nav>
+      <span>Como funciona</span>
+      <span>Para clientes</span>
+      <span>Para fornecedores</span>
+      <span>Preços</span>
+      <span>Sobre nós</span>
+    </nav>
+    <div class="icons">
+      <button class="icon-btn" aria-label="Notificações">
+        <img src="https://img.icons8.com/ios-filled/50/bell.png" alt="Notificações" />
+      </button>
+      <div class="menu-container" id="menuContainer">
+        <div class="avatar" id="avatarBtn">F</div>
+        <div class="dropdown-menu" id="dropdownMenu">
+          <div onclick="window.location.href='servicosFornecedor.html'">Meus Serviços</div>
+          <div onclick="window.location.href='formulario.html'">Adicionar Serviço</div>
+          <div onclick="window.location.href='servicosAceites.html'">Lista de Serviços</div>
+          <div onclick="window.location.href='servicosPendentes.html'">Gerir Pedidos</div>
+          <div onclick="window.location.href='servicosRealizados.html'">Histórico</div>
+          <div>Suporte</div>
+          <div id="logout">Logout</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <div class="main-content">
+    <div class="left-box">
+      <h1>Para Fornecedores...</h1>
+      <p>
+        Seja bem-vindo à nossa plataforma, um espaço criado para aproximar fornecedores de serviços dos clientes que os procuram. Aqui, pode divulgar os seus serviços,
+        gerir a sua agenda e receber reservas de forma simples e eficiente.
+      </p>
+      <br>
+      <p>
+        Crie o seu perfil, adicione uma descrição clara dos seus serviços, defina os seus horários disponíveis e comece a receber marcações de clientes em poucos passos.
+      </p>
+      <br>
+      <p>
+        Torne-se visível, ganhe tempo e foque-se no que faz melhor!
+      </p>
+    </div>
+    <div class="right-box">
+      <button onclick="window.location.href = 'formulario.html'" class="action-button">
+        <img src="https://img.icons8.com/ios-filled/50/plus.png" alt="Adicionar Serviços" />
+        Adicionar Serviços
+      </button>
+      <button onclick="window.location.href = 'servicosAceites.html'" class="action-button">
+        <img src="https://img.icons8.com/ios-filled/50/documents.png" alt="Lista de Serviços" />
+        Lista de Serviços
+      </button>
+      <button onclick="window.location.href = 'servicosPendentes.html'" class="action-button">
+        <img src="https://img.icons8.com/ios-filled/50/settings.png" alt="Gerir Pedidos" />
+        Gerir Pedidos
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const avatarBtn = document.getElementById('avatarBtn');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+
+    avatarBtn.addEventListener('click', () => {
+      dropdownMenu.classList.toggle('active');
+    });
+
+    window.addEventListener('click', (e) => {
+      if (!avatarBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+        dropdownMenu.classList.remove('active');
+      }
+    });
+
+    document.getElementById('logout').addEventListener('click', () => {
+      window.location.href = 'paginaInicial.html';
+    });
+  </script>
+</body>
+</html>

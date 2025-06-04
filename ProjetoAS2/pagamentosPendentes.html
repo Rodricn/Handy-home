@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Pagamentos Pendentes</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #1a2e47;
+        }
+        header {
+            background: #c9c9c9;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+        }
+        nav {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        nav a {
+            text-decoration: none;
+            color: #1a2e47;
+            font-weight: 500;
+        }
+        .search-bar {
+            position: relative;
+            width: 220px; /* Adjust width as needed */
+        }
+        .search-bar input[type="text"] {
+            padding: 0.5rem 2.5rem 0.5rem 1rem; /* Adjust padding for icon */
+            border-radius: 20px;
+            border: 1px solid #ccc;
+            width: 100%;
+        }
+        .search-bar .clear-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .user-section .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            position: relative;
+        }
+        .user-section .icon-btn img {
+            width: 24px;
+            height: 24px;
+        }
+        .user-section .profile-icon {
+            background-color: #1a2e47; /* Dark blue background */
+            color: white;
+            border-radius: 50%; /* Makes it circular */
+            width: 32px; /* Set width and height for the circle */
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .main-content {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        h1 {
+            color: #1a2e47;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .payment-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .payment-card .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px; /* Slightly rounded corners for the logo container */
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .payment-card .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .payment-card .details {
+            flex-grow: 1;
+        }
+
+        .payment-card .details h2 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.3rem;
+            color: #1a2e47;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .payment-card .details h2 .verified-icon {
+            width: 16px;
+            height: 16px;
+            vertical-align: middle;
+        }
+
+        .payment-card .details p {
+            margin: 0.2rem 0;
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .payment-card .details .highlight {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .payment-card .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .payment-card .actions .pay-button {
+            background-color: #ff0000; /* Red button */
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            white-space: nowrap; /* Prevent text wrapping */
+        }
+
+        .payment-card .actions .select-button {
+            background-color: #1e3a5f; /* Dark blue button */
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            white-space: nowrap; /* Prevent text wrapping */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="search-bar">
+            <input type="text" placeholder="Pesquisar...">
+            <button class="clear-btn">×</button>
+        </div>
+        <nav>
+            <a href="#">Como funciona</a>
+            <a href="#">Para clientes</a>
+            <a href="#">Para fornecedores</a>
+            <a href="#">Preços</a>
+            <a href="#">Sobre nós</a>
+        </nav>
+        <div class="user-section">
+            <button class="icon-btn"><img src="https://img.icons8.com/ios-filled/50/bell.png" alt="Notificações"></button>
+            <div class="profile-icon">F</div>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <h1>Pagamentos pendentes</h1>
+
+        <div class="payment-card">
+            <div class="logo">
+                <img src="PNG/edp.png" alt="Logo EDP">
+            </div>
+            <div class="details">
+                <h2>EDP <img src="PNG/blue_check.png" alt="Verificado" style="width: 16px;"></h2>
+                <p><span class="highlight">Tempo para o pagamento</span> - até 48 horas antes do agendamento</p>
+                <p><span class="highlight">Data do serviço</span> - 17/08/2025</p>
+                <p><span class="highlight">Serviço</span> - Eletricidade</p>
+            </div>
+            <div class="actions">
+                <a href="#" class="pay-button">Por pagar</a>
+                <a href="metodoPagamento.html" class="select-button">Selecionar</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

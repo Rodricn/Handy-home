@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Serviços Aceites</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f3f3f3;
+      color: #1a2e47;
+      min-height: 100vh;
+    }
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #c9c9c9;
+      padding: 15px 30px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .navbar .search {
+      display: flex;
+      align-items: center;
+      background: #fff;
+      border-radius: 20px;
+      padding: 6px 12px;
+      border: 1px solid #060707;
+      box-shadow: 0 1px 4px rgba(96, 165, 250, 0.2);
+      max-width: 300px;
+      flex: 1;
+    }
+    .navbar input {
+      border: none;
+      outline: none;
+      background: transparent;
+      margin-right: 10px;
+      flex: 1;
+    }
+    .navbar nav {
+      display: flex;
+      gap: 25px;
+      font-size: 14px;
+      color: #1a2e47;
+      font-weight: 600;
+      flex: 2;
+      justify-content: center;
+    }
+    .navbar nav span {
+      cursor: pointer;
+    }
+    .navbar .icons {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex: 1;
+      justify-content: flex-end;
+    }
+    .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+    }
+    .icon-btn img {
+      width: 24px;
+      height: 24px;
+    }
+    .menu-container {
+      position: relative;
+      display: inline-block;
+      user-select: none;
+    }
+    .avatar {
+      cursor: pointer;
+      font-weight: 600;
+      color: white;
+      background-color: #1a2e47;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.1rem;
+    }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 110%;
+      right: 0;
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      min-width: 200px;
+      z-index: 10;
+      padding: 0.5rem 0;
+      font-weight: 400;
+      color: #1a2e47;
+    }
+    .dropdown-menu.active {
+      display: block;
+    }
+    .dropdown-menu div {
+      padding: 0.6rem 1.2rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color 0.15s ease;
+    }
+    .dropdown-menu div:hover {
+      background-color: #e0e0e0;
+    }
+
+    .tabs {
+      display: flex; justify-content: center; margin: 40px 0; gap: 20px;
+    }
+    .tabs button {
+      padding: 10px 25px; border: none; border-radius: 6px;
+      background-color: #e0e0e0; color: #1a2e47; font-weight: 500;
+      cursor: pointer;
+    }
+    .tabs button:nth-child(2) {
+      background-color: #0f2137; color: white;
+    }
+    .service-card {
+      background-color: white; border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin: 40px auto; max-width: 850px;
+      padding: 30px 24px;
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 30px;
+    }
+    .profile {
+      display: flex; align-items: center; gap: 20px; flex: 1;
+    }
+    .profile img {
+      width: 70px; height: 70px; border-radius: 50%; background-color: #ddd;
+    }
+    .profile-info h3 {
+      margin-bottom: 8px; font-size: 18px;
+    }
+    .profile-info p {
+      font-size: 14px; color: #444; margin-bottom: 4px;
+    }
+    .actions {
+      display: flex; flex-direction: column; align-items: flex-end; gap: 12px;
+    }
+    .status-box {
+      background-color: red; color: white; padding: 8px 20px;
+      border-radius: 8px; font-weight: bold; font-size: 14px; width: max-content;
+    }
+    .status-box.running { background-color: green; }
+    .status-box.done { background-color: #00aaff; }
+    .actions-top { display: flex; gap: 10px; }
+    .actions button {
+      padding: 6px 14px; border: none; border-radius: 6px;
+      font-size: 14px; cursor: pointer; font-weight: bold;
+      background-color: #0f2137; color: white;
+    }
+    .pagination {
+      display: flex; justify-content: center; align-items: center;
+      margin: 60px 0 80px; gap: 8px; font-weight: bold;
+    }
+    .pagination span {
+      padding: 6px 12px; background-color: #0f2137;
+      color: white; border-radius: 6px;
+    }
+    .menu-button {
+      position: fixed; bottom: 20px; right: 20px;
+      background-color: #0f2137; color: white;
+      padding: 10px 20px; border-radius: 8px;
+      font-weight: bold; border: none; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="search"><input type="text" placeholder="Pesquisar..."><span>✕</span></div>
+    <nav>
+      <span>Como funciona</span><span>Para clientes</span><span>Para fornecedores</span>
+      <span>Preços</span><span>Sobre nós</span>
+    </nav>
+    <div class="icons">
+      <button class="icon-btn" aria-label="Notificações">
+        <img src="https://img.icons8.com/ios-filled/50/bell.png" alt="Notificações" />
+      </button>
+      <div class="menu-container" id="menuContainer">
+        <div class="avatar" id="avatarBtn">F</div>
+        <div class="dropdown-menu" id="dropdownMenu">
+          <div onclick="window.location.href='servicosFornecedor.html'">Meus Serviços</div>
+          <div onclick="window.location.href='formulario.html'">Adicionar Serviço</div>
+          <div onclick="window.location.href='servicosAceites.html'">Lista de Serviços</div>
+          <div onclick="window.location.href='servicosPendentes.html'">Gerir Pedidos</div>
+          <div onclick="window.location.href='servicosRealizados.html'">Histórico</div>
+          <div>Suporte</div>
+          <div id="logout">Logout</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button onclick="window.location.href='servicosFornecedor.html'">Meus Serviços</button>
+    <button>Serviços Aceites</button>
+    <button onclick="window.location.href='servicosRealizados.html'">Serviços Realizados</button>
+  </div>
+
+  <!-- Cards -->
+  <div class="service-card">
+    <div class="profile">
+      <img src="https://img.icons8.com/ios-filled/100/user-male-circle.png" alt="Perfil">
+      <div class="profile-info">
+        <h3>João Ferreira</h3>
+        <p>Data do serviço - 17/08/2025</p>
+        <p>Serviço - Eletricidade</p>
+      </div>
+    </div>
+    <div class="actions">
+      <div class="status-box">Por iniciar</div>
+      <div class="actions-top">
+        <button onclick="startService(this)">Iniciar</button>
+        <button onclick="cancelService(this)">Cancelar</button>
+        <button>Ver detalhes</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="service-card">
+    <div class="profile">
+      <img src="https://img.icons8.com/ios-filled/100/user-male-circle.png" alt="Perfil">
+      <div class="profile-info">
+        <h3>Guilherme Santos</h3>
+        <p>Data do serviço - 19/08/2025</p>
+        <p>Serviço - Eletricidade</p>
+      </div>
+    </div>
+    <div class="actions">
+      <div class="status-box">Por iniciar</div>
+      <div class="actions-top">
+        <button onclick="startService(this)">Iniciar</button>
+        <button onclick="cancelService(this)">Cancelar</button>
+        <button>Ver detalhes</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="service-card">
+    <div class="profile">
+      <img src="https://img.icons8.com/ios-filled/100/user-male-circle.png" alt="Perfil">
+      <div class="profile-info">
+        <h3>Helena Oliveira</h3>
+        <p>Data do serviço - 02/09/2025</p>
+        <p>Serviço - Canalização</p>
+      </div>
+    </div>
+    <div class="actions">
+      <div class="status-box">Por iniciar</div>
+      <div class="actions-top">
+        <button onclick="startService(this)">Iniciar</button>
+        <button onclick="cancelService(this)">Cancelar</button>
+        <button>Ver detalhes</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="pagination">
+    <span>1</span>
+    <span style="background:#e0e0e0; color:#1a2e47;">2</span>
+    <span style="background:#e0e0e0; color:#1a2e47;">3</span>
+  </div>
+
+  <button onclick="window.location.href='menuFornecedor.html'" class="menu-button">Menu</button>
+
+  <script>
+    const avatarBtn = document.getElementById('avatarBtn');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+
+    avatarBtn.addEventListener('click', () => {
+      dropdownMenu.classList.toggle('active');
+    });
+
+    window.addEventListener('click', (e) => {
+      if (!avatarBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+        dropdownMenu.classList.remove('active');
+      }
+    });
+
+    document.getElementById('logout').addEventListener('click', () => {
+      window.location.href = 'paginaInicial.html';
+    });
+
+    function startService(button) {
+      const card = button.closest('.service-card');
+      const statusBox = card.querySelector('.status-box');
+      const actionsTop = card.querySelector('.actions-top');
+
+      statusBox.textContent = 'A decorrer';
+      statusBox.classList.remove('inativo');
+      statusBox.classList.add('running');
+
+      actionsTop.innerHTML = '<button onclick="confirmService(this)">Confirmar realização do serviço</button>';
+    }
+
+    function confirmService(button) {
+      const card = button.closest('.service-card');
+      const statusBox = card.querySelector('.status-box');
+
+      statusBox.textContent = 'Realizado';
+      statusBox.classList.remove('running');
+      statusBox.classList.add('done');
+
+      button.remove();
+    }
+
+    function cancelService(button) {
+      const card = button.closest('.service-card');
+      card.remove();
+    }
+  </script>
+</body>
+</html>

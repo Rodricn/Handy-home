@@ -1,0 +1,152 @@
+/* Estilos da página "Selecione o serviço que deseja" */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: url('fundo.png') no-repeat center center/cover;
+  color: #1a2e47;
+  min-height: 100vh;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #c9c9c9;
+  padding: 15px 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.navbar .search {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 20px;
+  padding: 6px 12px;
+  border: 1px solid #060707;
+  box-shadow: 0 1px 4px rgba(96, 165, 250, 0.2);  
+}
+
+.navbar input {
+  border: none;
+  outline: none;
+  background: transparent;
+  margin-right: 10px;
+}
+
+.navbar nav {
+  display: flex;
+  gap: 25px;
+  font-size: 14px;
+  color: #1a2e47;
+}
+
+.navbar .icons {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.navbar .avatar {
+  background-color: #1a2e47;
+  color: white;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.main-content {
+  padding: 60px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.main-content h1 {
+  background-color: #1a2e47;
+  color: white;
+  padding: 18px 36px;
+  border-radius: 12px;
+  margin-bottom: 50px;
+  font-size: 24px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.services-grid {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.75);
+  padding: 50px;
+  border-radius: 20px;
+  max-width: 1100px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.service-box {
+  background-color: white;
+  border-radius: 16px;
+  padding: 30px 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 1px solid #e5e7eb;
+}
+
+.service-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.1);
+}
+
+.service-box img {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+  
+}
+
+.service-box span {
+  font-weight: 600;
+  font-size: 16px;
+  color: #1a2e47;
+}
+
+.services-grid .full-row {
+  grid-column: span 3;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+@media (max-width: 900px) {
+  .services-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .services-grid .full-row {
+    grid-column: span 2;
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+    padding: 30px 20px;
+  }
+}

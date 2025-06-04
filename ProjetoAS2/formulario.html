@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Formulário</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: #fff;
+      color: #0f2137;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 20px;
+    }
+
+    .form-wrapper {
+      max-width: 900px;
+      width: 100%;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 28px;
+      margin-bottom: 40px;
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px 60px;
+      justify-content: center;
+    }
+
+    .form-group {
+      text-align: left;
+      position: relative;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 12px;
+      font-size: 14px;
+      background-color: #e4e4e4;
+      border: 1px solid #c0c0c0;
+      border-radius: 6px;
+      resize: vertical;
+      height: 100px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    }
+
+    .dropdown-multi {
+      position: relative;
+      background-color: #e4e4e4;
+      border-radius: 6px;
+      padding: 12px;
+      cursor: pointer;
+      user-select: none;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      border: 1px solid #c0c0c0;
+    }
+
+    .dropdown-multi::after {
+      content: "▾";
+      position: absolute;
+      right: 12px;
+      top: 14px;
+      pointer-events: none;
+    }
+
+    .dropdown-options {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #e4e4e4;
+      padding: 10px;
+      border-radius: 6px;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 100;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      border: 1px solid #c0c0c0;
+    }
+
+    .dropdown-multi.open .dropdown-options {
+      display: flex;
+    }
+
+    .dropdown-options label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+    }
+
+    .form-footer {
+      grid-column: 1 / -1;
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .checkbox-container input {
+      transform: scale(1.2);
+    }
+
+    button[type="submit"], .back-btn {
+      background-color: #0f2137;
+      color: white;
+      border: none;
+      padding: 12px 40px;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 10px;
+    }
+
+    button[type="submit"]:hover, .back-btn:hover {
+      background-color: #1a2b4c;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-wrapper">
+    <h2>Formulário</h2>
+    <form id="formulario">
+      <!-- Categoria -->
+      <div class="form-group">
+        <label>1. Categoria</label>
+        <div class="dropdown-multi" id="dropdown-categoria">
+          Selecione Categorias
+          <div class="dropdown-options" onclick="event.stopPropagation()">
+            <label><input type="checkbox" name="categoria[]" value="Canalização"> Canalização</label>
+            <label><input type="checkbox" name="categoria[]" value="Eletricidade"> Eletricidade</label>
+            <label><input type="checkbox" name="categoria[]" value="Limpeza"> Limpeza</label>
+            <label><input type="checkbox" name="categoria[]" value="Jardinagem"> Jardinagem</label>
+            <label><input type="checkbox" name="categoria[]" value="Segurança"> Segurança</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Zona de Atendimento -->
+      <div class="form-group">
+        <label>2. Zona de Atendimento</label>
+        <div class="dropdown-multi" id="dropdown-zona">
+          Selecione Zonas
+          <div class="dropdown-options" onclick="event.stopPropagation()">
+            <label><input type="checkbox" name="zona[]" value="Lisboa"> Lisboa</label>
+            <label><input type="checkbox" name="zona[]" value="Porto"> Porto</label>
+            <label><input type="checkbox" name="zona[]" value="Coimbra"> Coimbra</label>
+            <label><input type="checkbox" name="zona[]" value="Faro"> Faro</label>
+            <label><input type="checkbox" name="zona[]" value="Braga"> Braga</label>
+            <label><input type="checkbox" name="zona[]" value="Aveiro"> Aveiro</label>
+            <label><input type="checkbox" name="zona[]" value="Leiria"> Leiria</label>
+            <label><input type="checkbox" name="zona[]" value="Viseu"> Viseu</label>
+            <label><input type="checkbox" name="zona[]" value="Setúbal"> Setúbal</label>
+            <label><input type="checkbox" name="zona[]" value="Évora"> Évora</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dias da Semana -->
+      <div class="form-group">
+        <label>3. Dias da semana</label>
+        <div class="dropdown-multi" id="dropdown-dias">
+          Selecione Dias
+          <div class="dropdown-options" onclick="event.stopPropagation()">
+            <label><input type="checkbox" name="dias[]" value="Segunda-feira"> Segunda-feira</label>
+            <label><input type="checkbox" name="dias[]" value="Terça-feira"> Terça-feira</label>
+            <label><input type="checkbox" name="dias[]" value="Quarta-feira"> Quarta-feira</label>
+            <label><input type="checkbox" name="dias[]" value="Quinta-feira"> Quinta-feira</label>
+            <label><input type="checkbox" name="dias[]" value="Sexta-feira"> Sexta-feira</label>
+            <label><input type="checkbox" name="dias[]" value="Sábado"> Sábado</label>
+            <label><input type="checkbox" name="dias[]" value="Domingo"> Domingo</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Horário de Atendimento -->
+      <div class="form-group">
+        <label>4. Horário de Atendimento</label>
+        <div class="dropdown-multi" id="dropdown-horario">
+          Selecione Horários
+          <div class="dropdown-options" onclick="event.stopPropagation()">
+            <label><input type="checkbox" name="horario[]" value="08:00 - 10:00"> 08:00 - 10:00</label>
+            <label><input type="checkbox" name="horario[]" value="10:00 - 12:00"> 10:00 - 12:00</label>
+            <label><input type="checkbox" name="horario[]" value="12:00 - 14:00"> 12:00 - 14:00</label>
+            <label><input type="checkbox" name="horario[]" value="14:00 - 16:00"> 14:00 - 16:00</label>
+            <label><input type="checkbox" name="horario[]" value="16:00 - 18:00"> 16:00 - 18:00</label>
+            <label><input type="checkbox" name="horario[]" value="18:00 - 20:00"> 18:00 - 20:00</label>
+            <label><input type="checkbox" name="horario[]" value="Todo o dia"> Todo o dia</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Descrição -->
+      <div class="form-group" style="grid-column: 1 / -1;">
+        <label for="descricao">5. Descrição</label>
+        <textarea id="descricao" name="descricao" placeholder="Descreva os serviços que oferece..." required></textarea>
+      </div>
+
+      <!-- Rodapé -->
+      <div class="form-footer">
+        <div class="checkbox-container">
+          <input type="checkbox" id="termos" required />
+          <label for="termos">
+            Declaro que li e aceito os <strong>Termos de Utilização</strong> e a <strong>Política de Privacidade</strong>.
+          </label>
+        </div>
+        <button type="submit">Submeter</button>
+        <button type="button" class="back-btn" onclick="window.location.href='menuFornecedor.html'">Voltar</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const dropdowns = document.querySelectorAll(".dropdown-multi");
+
+    dropdowns.forEach(dropdown => {
+      dropdown.addEventListener("click", function (e) {
+        if (!e.target.closest(".dropdown-options")) {
+          this.classList.toggle("open");
+        }
+      });
+    });
+
+    window.addEventListener("click", function (e) {
+      dropdowns.forEach(dropdown => {
+        if (!dropdown.contains(e.target)) {
+          dropdown.classList.remove("open");
+        }
+      });
+    });
+
+    document.getElementById("formulario").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const checkedCategorias = document.querySelectorAll("input[name='categoria[]']:checked").length;
+      const checkedZonas = document.querySelectorAll("input[name='zona[]']:checked").length;
+      const checkedDias = document.querySelectorAll("input[name='dias[]']:checked").length;
+      const checkedHorario = document.querySelectorAll("input[name='horario[]']:checked").length;
+      const descricao = document.getElementById("descricao").value.trim();
+      const termosAceitos = document.getElementById("termos").checked;
+
+      if (checkedCategorias && checkedZonas && checkedDias && checkedHorario && descricao && termosAceitos) {
+        window.location.href = 'menuFornecedor.html';
+      } else {
+        alert('Por favor, preencha todos os campos obrigatórios antes de submeter.');
+      }
+    });
+  </script>
+</body>
+</html>

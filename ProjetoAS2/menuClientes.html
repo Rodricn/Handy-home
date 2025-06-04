@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Serviços</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="projcss.css">
+  <style>
+    /* Reset e base */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: url('PNG/fundo.png') no-repeat center center/cover;
+      color: #1a2e47;
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #c9c9c9;
+      padding: 15px 30px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .navbar .search {
+      display: flex;
+      align-items: center;
+      background: #fff;
+      border-radius: 20px;
+      padding: 6px 12px;
+      border: 1px solid #060707;
+      box-shadow: 0 1px 4px rgba(96, 165, 250, 0.2);  
+      max-width: 300px;
+      flex: 1;
+    }
+
+    .navbar input {
+      border: none;
+      outline: none;
+      background: transparent;
+      margin-right: 10px;
+      flex: 1;
+    }
+
+    .navbar nav {
+      display: flex;
+      gap: 25px;
+      font-size: 14px;
+      color: #1a2e47;
+      font-weight: 600;
+      flex: 2;
+      justify-content: center;
+    }
+
+    .navbar nav span {
+      cursor: pointer;
+    }
+
+    .navbar .icons {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex: 1;
+      justify-content: flex-end;
+    }
+
+    /* Ícone notificações */
+    .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+    }
+    .icon-btn img {
+      width: 24px;
+      height: 24px;
+    }
+
+    /* Avatar e dropdown */
+    .menu-container {
+      position: relative;
+      display: inline-block;
+      user-select: none;
+    }
+    .avatar {
+      cursor: pointer;
+      font-weight: 600;
+      color: white;
+      background-color: #1a2e47;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.1rem;
+      user-select: none;
+    }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 110%;
+      right: 0;
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      min-width: 200px;
+      z-index: 10;
+      padding: 0.5rem 0;
+      font-weight: 400;
+      color: #1a2e47;
+    }
+    .dropdown-menu.active {
+      display: block;
+    }
+    .dropdown-menu div {
+      padding: 0.6rem 1.2rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color 0.15s ease;
+    }
+    .dropdown-menu div:hover {
+      background-color: #e0e0e0;
+    }
+
+    /* Conteúdo principal */
+    .main-content {
+      padding: 60px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .main-content h1 {
+      background-color: #1a2e47;
+      color: white;
+      padding: 18px 36px;
+      border-radius: 12px;
+      margin-bottom: 50px;
+      font-size: 24px;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Grid dos serviços */
+    .services-grid {
+      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.75);
+      padding: 50px;
+      border-radius: 20px;
+      max-width: 1100px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+    }
+
+    .service-box {
+      background-color: white;
+      border-radius: 16px;
+      padding: 30px 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: 1px solid #e5e7eb;
+    }
+
+    .service-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.1);
+    }
+
+    .service-box img {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 16px;
+      object-fit: contain;
+    }
+
+    .service-box span {
+      font-weight: 600;
+      font-size: 16px;
+      color: #1a2e47;
+    }
+
+    .services-grid .full-row {
+      grid-column: span 3;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    @media (max-width: 900px) {
+      .services-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .services-grid .full-row {
+        grid-column: span 2;
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .services-grid {
+        grid-template-columns: 1fr;
+        padding: 30px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="search">
+      <input type="text" placeholder="Pesquisar..." />
+      <span>✕</span>
+    </div>
+    <nav>
+      <span>Como funciona</span>
+      <span>Para clientes</span>
+      <span>Para fornecedores</span>
+      <span>Preços</span>
+      <span>Sobre nós</span>
+    </nav>
+    <div class="icons">
+      <button class="icon-btn" aria-label="Notificações">
+        <img src="https://img.icons8.com/ios-filled/50/bell.png" alt="Notificações" />
+      </button>
+
+      <div class="menu-container" id="menuContainer">
+        <div class="avatar" id="avatarBtn">F</div>
+        <div class="dropdown-menu" id="dropdownMenu">
+          <div id="pagamentosPendentes">Pagamentos pendentes</div>
+          <div id="confirmarServico">Confirmação de serviços</div>
+          <div>Planos de subscrição</div>
+          <div>Suporte</div>
+          <div id="logout">Logout</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <h1>Selecione o serviço que deseja</h1>
+
+    <div class="services-grid">
+      <!-- Linha de cima -->
+      <div class="service-box">
+        <img src="PNG/Canalização.png" alt="Canalização" />
+        <span>Canalização</span>
+      </div>
+      <div class="service-box">
+        <img src="PNG/Eletricidade.png" alt="Eletricidade" />
+        <span>Eletricidade</span>
+      </div>
+      <div class="service-box">
+        <img src="PNG/Segurança.png" alt="Segurança" />
+        <span>Segurança</span>
+      </div>
+
+      <!-- Linha de baixo -->
+      <div class="full-row">
+        <div class="service-box">
+          <img src="PNG/Limpeza.png" alt="Limpeza" />
+          <span>Limpeza</span>
+        </div>
+        <div class="service-box">
+          <img src="PNG/Jardinagem.png" alt="Jardinagem" />
+          <span>Jardinagem</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const avatarBtn = document.getElementById('avatarBtn');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+
+    avatarBtn.addEventListener('click', () => {
+      dropdownMenu.classList.toggle('active');
+    });
+
+    window.addEventListener('click', (e) => {
+      if (!avatarBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+        dropdownMenu.classList.remove('active');
+      }
+    });
+
+    // Adicionar redirecionamento aos itens do dropdown
+    document.getElementById('pagamentosPendentes').addEventListener('click', () => {
+      window.location.href = 'pagamentosPendentes.html';
+    });
+
+    document.getElementById('confirmarServico').addEventListener('click', () => {
+      window.location.href = 'confirmarServico.html';
+    });
+
+    document.getElementById('logout').addEventListener('click', () => {
+      window.location.href = 'paginaInicial.html';
+    });
+
+    // Redirecionar ao clicar em Eletricidade
+    document.querySelectorAll('.service-box')[1].addEventListener('click', () => {
+      window.location.href = 'servicosEncontrados.html';
+    });
+  </script>
+
+</body>
+</html>

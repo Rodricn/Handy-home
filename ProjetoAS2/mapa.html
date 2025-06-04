@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Escolher Localização</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f9f9f9;
+      color: #1a2e47;
+      min-height: 100vh;
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #c9c9c9;
+      padding: 15px 30px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      position: relative;
+      z-index: 1000;
+    }
+
+    .navbar .search {
+      display: flex;
+      align-items: center;
+      background: #fff;
+      border-radius: 20px;
+      padding: 6px 12px;
+      border: 1px solid #060707;
+      box-shadow: 0 1px 4px rgba(96, 165, 250, 0.2);
+      max-width: 300px;
+      flex: 1;
+    }
+
+    .navbar input {
+      border: none;
+      outline: none;
+      background: transparent;
+      margin-right: 10px;
+      flex: 1;
+    }
+
+    .navbar nav {
+      display: flex;
+      gap: 25px;
+      font-size: 14px;
+      color: #1a2e47;
+      font-weight: 600;
+      flex: 2;
+      justify-content: center;
+    }
+
+    .navbar nav span {
+      cursor: pointer;
+    }
+
+    .navbar .icons {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex: 1;
+      justify-content: flex-end;
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .icon-btn img {
+      width: 24px;
+      height: 24px;
+    }
+
+    .menu-container {
+      position: relative;
+      display: inline-block;
+      user-select: none;
+    }
+
+    .avatar {
+      cursor: pointer;
+      font-weight: 600;
+      color: white;
+      background-color: #1a2e47;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.1rem;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 110%;
+      right: 0;
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      min-width: 200px;
+      padding: 0.5rem 0;
+      font-weight: 400;
+      color: #1a2e47;
+      z-index: 1001 !important;
+    }
+
+    .dropdown-menu.active {
+      display: block;
+    }
+
+    .dropdown-menu div {
+      padding: 0.6rem 1.2rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color 0.15s ease;
+    }
+
+    .dropdown-menu div:hover {
+      background-color: #e0e0e0;
+    }
+
+    .main-content {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .section-title {
+      color: #1a2e47;
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .instructions {
+      font-size: 1.1rem;
+      color: #333;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    #map {
+      height: 700px;
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      margin-bottom: 1rem;
+      z-index: 0;
+    }
+
+    .leaflet-container {
+      z-index: 0 !important;
+    }
+
+    #confirmBtn {
+      display: none;
+      background-color: #1a2e47;
+      color: white;
+      border: none;
+      padding: 0.8rem 2rem;
+      border-radius: 5px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      margin: 0 auto 2rem;
+      display: block;
+      transition: background-color 0.3s ease;
+    }
+
+    #confirmBtn:hover {
+      background-color: #2a4c6e;
+    }
+
+    .leaflet-control-geocoder {
+      width: 300px !important;
+    }
+
+    .leaflet-control-geocoder-form {
+      display: flex !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    .leaflet-control-geocoder-icon {
+      display: none !important;
+    }
+
+    .leaflet-control-geocoder-input {
+      width: 100% !important;
+      border-radius: 4px !important;
+      padding: 5px 10px !important;
+      font-size: 1rem !important;
+      border: 1px solid #ccc !important;
+      box-shadow: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="search">
+      <input type="text" placeholder="Pesquisar..." />
+      <span onclick="this.previousElementSibling.value = ''">✕</span>
+    </div>
+    <nav>
+      <span>Como funciona</span>
+      <span>Para clientes</span>
+      <span>Para fornecedores</span>
+      <span>Preços</span>
+      <span>Sobre nós</span>
+    </nav>
+    <div class="icons">
+      <button class="icon-btn" aria-label="Notificações">
+        <img src="https://img.icons8.com/ios-filled/50/bell.png" alt="Notificações" />
+      </button>
+      <div class="menu-container" id="menuContainer">
+        <div class="avatar" id="avatarBtn">F</div>
+        <div class="dropdown-menu" id="dropdownMenu">
+          <div id="pagamentosPendentes">Pagamentos pendentes</div>
+          <div id="confirmarServico">Confirmação de serviços</div>
+          <div id="planos">Planos de subscrição</div>
+          <div id="suporte">Suporte</div>
+          <div id="logout">Logout</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <h1 class="section-title">Escolha a sua localização</h1>
+    <p class="instructions">Clique no mapa para selecionar a localização desejada ou procure uma cidade abaixo.</p>
+    <div id="map"></div>
+    <button id="confirmBtn">Confirmar Localização</button>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+  <script>
+    const cidadesCoords = {
+      Aveiro: [40.6405, -8.6538],
+      Lisboa: [38.736946, -9.142685],
+      Porto: [41.1495, -8.6108],
+      Coimbra: [40.2056, -8.4196],
+      Viseu: [40.6610, -7.9097],
+      Faro: [37.0194, -7.9304],
+    };
+
+    const cidadeSelecionada = localStorage.getItem('cidade') || 'Lisboa';
+    const coordsIniciais = cidadesCoords[cidadeSelecionada] || cidadesCoords['Lisboa'];
+
+    const map = L.map('map').setView(coordsIniciais, 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap contributors',
+    }).addTo(map);
+
+    const geocoder = L.Control.geocoder({
+      defaultMarkGeocode: false,
+      placeholder: 'Procurar cidade...',
+      errorMessage: 'Cidade não encontrada.'
+    })
+    .on('markgeocode', function(e) {
+      const bbox = e.geocode.bbox;
+      const poly = L.polygon([
+        bbox.getSouthEast(),
+        bbox.getNorthEast(),
+        bbox.getNorthWest(),
+        bbox.getSouthWest()
+      ]);
+      map.fitBounds(poly.getBounds());
+      const center = e.geocode.center;
+      selectedLatLng = center;
+      if (marker) {
+        marker.setLatLng(center);
+      } else {
+        marker = L.marker(center).addTo(map);
+      }
+      confirmBtn.style.display = 'block';
+    })
+    .addTo(map);
+
+    let marker;
+    let selectedLatLng;
+    const confirmBtn = document.getElementById('confirmBtn');
+
+    marker = L.marker(coordsIniciais).addTo(map);
+    selectedLatLng = marker.getLatLng();
+    confirmBtn.style.display = 'block';
+
+    map.on('click', function(e) {
+      selectedLatLng = e.latlng;
+      if (marker) {
+        marker.setLatLng(selectedLatLng);
+      } else {
+        marker = L.marker(selectedLatLng).addTo(map);
+      }
+      confirmBtn.style.display = 'block';
+    });
+
+    confirmBtn.addEventListener('click', () => {
+      if (selectedLatLng) {
+        const lat = selectedLatLng.lat.toFixed(5);
+        const lng = selectedLatLng.lng.toFixed(5);
+        window.location.href = `selecionarHorario.html?lat=${lat}&lng=${lng}`;
+      }
+    });
+
+    const avatarBtn = document.getElementById('avatarBtn');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+
+    avatarBtn.addEventListener('click', () => {
+      dropdownMenu.classList.toggle('active');
+    });
+
+    window.addEventListener('click', (e) => {
+      if (!avatarBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+        dropdownMenu.classList.remove('active');
+      }
+    });
+
+    document.getElementById('pagamentosPendentes')?.addEventListener('click', () => {
+      window.location.href = 'pagamentosPendentes.html';
+    });
+
+    document.getElementById('confirmarServico')?.addEventListener('click', () => {
+      window.location.href = 'confirmarServico.html';
+    });
+
+    document.getElementById('planos')?.addEventListener('click', () => {
+      window.location.href = 'planosSubscricao.html';
+    });
+
+    document.getElementById('suporte')?.addEventListener('click', () => {
+      window.location.href = 'suporte.html';
+    });
+
+    document.getElementById('logout')?.addEventListener('click', () => {
+      window.location.href = 'paginaInicial.html';
+    });
+  </script>
+</body>
+</html>

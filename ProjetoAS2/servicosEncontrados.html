@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Serviços Encontrados - Handy@Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f9f9f9;
+      color: #1a2e47;
+    }
+
+    /* --- NAVBAR --- */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #c9c9c9;
+      padding: 15px 30px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .navbar .search {
+      display: flex;
+      align-items: center;
+      background: #fff;
+      border-radius: 20px;
+      padding: 6px 12px;
+      border: 1px solid #060707;
+      box-shadow: 0 1px 4px rgba(96, 165, 250, 0.2);
+      max-width: 300px;
+      flex: 1;
+    }
+
+    .navbar input {
+      border: none;
+      outline: none;
+      background: transparent;
+      margin-right: 10px;
+      flex: 1;
+    }
+
+    .navbar nav {
+      display: flex;
+      gap: 25px;
+      font-size: 14px;
+      color: #1a2e47;
+      font-weight: 600;
+      flex: 2;
+      justify-content: center;
+    }
+
+    .navbar nav span {
+      cursor: pointer;
+    }
+
+    .navbar .icons {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex: 1;
+      justify-content: flex-end;
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .icon-btn img {
+      width: 24px;
+      height: 24px;
+    }
+
+    .menu-container {
+      position: relative;
+      display: inline-block;
+      user-select: none;
+    }
+
+    .avatar {
+      cursor: pointer;
+      font-weight: 600;
+      color: white;
+      background-color: #1a2e47;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.1rem;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 110%;
+      right: 0;
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      min-width: 200px;
+      z-index: 10;
+      padding: 0.5rem 0;
+      font-weight: 400;
+      color: #1a2e47;
+    }
+
+    .dropdown-menu.active {
+      display: block;
+    }
+
+    .dropdown-menu div {
+      padding: 0.6rem 1.2rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color 0.15s ease;
+    }
+
+    .dropdown-menu div:hover {
+      background-color: #e0e0e0;
+    }
+
+    /* --- CONTEÚDO PRINCIPAL --- */
+    .container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    h2 {
+      margin-bottom: 0.5rem;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .card img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+    }
+
+    .card .content {
+      flex: 1;
+    }
+
+    .card .content h3 {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card .content h3 img {
+      width: 16px;
+      height: 16px;
+    }
+
+    .card .content p {
+      margin-top: 0.5rem;
+      color: #555;
+    }
+
+    .card button {
+      background: #1e3a5f;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 2rem;
+    }
+
+    .pagination button {
+      padding: 0.4rem 0.8rem;
+      border: 1px solid #ccc;
+      background: white;
+      color: #1a2e47;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .pagination button.active {
+      background: #1e3a5f;
+      color: white;
+      border-color: #1e3a5f;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar Atualizada -->
+  <div class="navbar">
+    <div class="search">
+      <input type="text" placeholder="Pesquisar..." />
+      <span>✕</span>
+    </div>
+    <nav>
+      <span>Como funciona</span>
+      <span>Para clientes</span>
+      <span>Para fornecedores</span>
+      <span>Preços</span>
+      <span>Sobre nós</span>
+    </nav>
+    <div class="icons">
+      <button class="icon-btn" aria-label="Notificações">
+        <img src="https://img.icons8.com/ios-filled/50/bell.png" alt="Notificações" />
+      </button>
+      <div class="menu-container" id="menuContainer">
+        <div class="avatar" id="avatarBtn">F</div>
+        <div class="dropdown-menu" id="dropdownMenu">
+          <div onclick="window.location.href='pagamentosPendentes.html'">Pagamentos pendentes</div>
+          <div onclick="window.location.href='confirmarServico.html'">Confirmação de serviços</div>
+          <div>Planos de subscrição</div>
+          <div>Suporte</div>
+          <div id="logout">Logout</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Conteúdo Principal -->
+  <div class="container">
+    <h2>Serviços encontrados</h2>
+    <p>Eletricidade</p>
+
+    <div class="card">
+      <img src="PNG/edp.png" alt="EDP" />
+      <div class="content">
+        <h3>EDP <img src="PNG/blue_check.png" alt="Verificado" /></h3>
+        <p>
+          Energia segura, sustentável e inovadora ao serviço de milhões de
+          portugueses, com presença em todo o país e compromisso com o futuro.
+        </p>
+      </div>
+      <button id="edpBtn">Selecionar</button>
+    </div>
+
+    <div class="card">
+      <img src="PNG/Utilizador.png" alt="Manuel Silva" />
+      <div class="content">
+        <h3>Manuel Silva</h3>
+        <p>
+          Serviços elétricos de confiança, feitos com profissionalismo e
+          atenção ao detalhe. Instalações, reparações e manutenção para casa
+          ou empresa.
+        </p>
+      </div>
+      <button>Selecionar</button>
+    </div>
+
+    <div class="card">
+      <img src="PNG/eletroplus.png" alt="EletroPlus" />
+      <div class="content">
+        <h3>EletroPlus</h3>
+        <p>
+          Especialistas em soluções elétricas em Aveiro, com serviços rápidos,
+          seguros e personalizados para casas e empresas.
+        </p>
+      </div>
+      <button>Selecionar</button>
+    </div>
+
+    <div class="pagination">
+      <button class="active">1</button>
+      <button>2</button>
+      <button>3</button>
+      <button>4</button>
+      <button>5</button>
+    </div>
+  </div>
+
+  <script>
+    // Dropdown da navbar
+    const avatarBtn = document.getElementById('avatarBtn');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+
+    avatarBtn.addEventListener('click', () => {
+      dropdownMenu.classList.toggle('active');
+    });
+
+    window.addEventListener('click', (e) => {
+      if (!avatarBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+        dropdownMenu.classList.remove('active');
+      }
+    });
+
+    document.getElementById('logout').addEventListener('click', () => {
+      window.location.href = 'paginaInicial.html';
+    });
+
+    // Redireciona ao selecionar EDP
+    document.getElementById('edpBtn').addEventListener('click', () => {
+      window.location.href = 'agendamento.html';
+    });
+  </script>
+
+</body>
+</html>

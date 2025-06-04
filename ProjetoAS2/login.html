@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - Handy@Home</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      color: #1a2e47;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .login-container {
+      width: 100%;
+      max-width: 400px;
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border-radius: 6px;
+      border: none;
+      background: #e6e6e6;
+      font-size: 1rem;
+    }
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .checkbox-container input[type="checkbox"] {
+      margin-right: 0.5rem;
+    }
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      background: #1a2e47;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .password-wrapper {
+      position: relative;
+    }
+    .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      cursor: pointer;
+    }
+    .toggle-password img {
+      width: 22px;
+      height: 22px;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Login</h2>
+    <form onsubmit="return handleLogin(event)">
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="Email" required>
+
+      <label for="password">Palavra-passe</label>
+      <div class="password-wrapper">
+        <input type="password" id="password" placeholder="Palavra-passe" required>
+        <span class="toggle-password" onclick="togglePassword()">
+          <img src="PNG/OlhoFechado.png" alt="Mostrar/Esconder" id="eyeIcon">
+        </span>
+      </div>
+
+      <div class="checkbox-container">
+        <input type="checkbox" id="remember">
+        <label for="remember">Manter-me conectado</label>
+      </div>
+
+      <button type="submit">Entrar</button>
+    </form>
+  </div>
+
+  <script>
+    let visible = false;
+    function togglePassword() {
+      const password = document.getElementById('password');
+      const eyeIcon = document.getElementById('eyeIcon');
+      visible = !visible;
+      password.type = visible ? 'text' : 'password';
+      eyeIcon.src = visible ? 'PNG/OlhoAberto.png' : 'PNG/OlhoFechado.png';
+    }
+
+    function handleLogin(event) {
+      event.preventDefault();
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const password = document.getElementById('password').value.trim();
+
+      if (email === 'cliente1@gmail.com' && password === 'cliente1') {
+        window.location.href = 'menuClientes.html';
+        return false;
+      }
+      if (email === 'fornecedor1@gmail.com' && password === 'fornecedor1') {
+        window.location.href = 'menuFornecedor.html';
+        return false;
+      }
+
+      const contasJSON = localStorage.getItem('contas');
+      if (contasJSON) {
+        const contas = JSON.parse(contasJSON);
+        const conta = contas.find(
+          c => c.email.toLowerCase() === email && c.password === password
+        );
+
+        if (conta) {
+          window.location.href = conta.tipo === 'cliente' ? 'menuClientes.html' : 'menuFornecedor.html';
+          return false;
+        }
+      }
+
+      alert('Email ou palavra-passe incorretos.');
+      return false;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Agendamento - EDP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f9f9f9;
+      color: #1a2e47;
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #c9c9c9;
+      padding: 15px 30px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .navbar .search {
+      display: flex;
+      align-items: center;
+      background: #fff;
+      border-radius: 20px;
+      padding: 6px 12px;
+      border: 1px solid #060707;
+      box-shadow: 0 1px 4px rgba(96, 165, 250, 0.2);
+      max-width: 300px;
+      flex: 1;
+    }
+
+    .navbar input {
+      border: none;
+      outline: none;
+      background: transparent;
+      margin-right: 10px;
+      flex: 1;
+    }
+
+    .navbar nav {
+      display: flex;
+      gap: 25px;
+      font-size: 14px;
+      color: #1a2e47;
+      font-weight: 600;
+      flex: 2;
+      justify-content: center;
+    }
+
+    .navbar nav span {
+      cursor: pointer;
+    }
+
+    .navbar .icons {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex: 1;
+      justify-content: flex-end;
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .icon-btn img {
+      width: 24px;
+      height: 24px;
+    }
+
+    .menu-container {
+      position: relative;
+      display: inline-block;
+      user-select: none;
+    }
+
+    .avatar {
+      cursor: pointer;
+      font-weight: 600;
+      color: white;
+      background-color: #1a2e47;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.1rem;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 110%;
+      right: 0;
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      min-width: 200px;
+      z-index: 10;
+      padding: 0.5rem 0;
+      font-weight: 400;
+      color: #1a2e47;
+    }
+
+    .dropdown-menu.active {
+      display: block;
+    }
+
+    .dropdown-menu div {
+      padding: 0.6rem 1.2rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color 0.15s ease;
+    }
+
+    .dropdown-menu div:hover {
+      background-color: #e0e0e0;
+    }
+
+    /* Conteúdo */
+    .container {
+      display: flex;
+      max-width: 1400px;
+      margin: 4rem auto;
+      padding: 0 2rem;
+      gap: 2rem;
+      align-items: stretch;
+    }
+
+    .image-container {
+      flex: 1 1 35%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .image-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      max-height: 100%;
+    }
+
+    .form-section {
+      flex: 1 1 65%;
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 2rem 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .form-section h2 {
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-section p {
+      color: #555;
+    }
+
+    .form-section select,
+    .form-section textarea,
+    .form-section button {
+      width: 100%;
+      margin-top: 2rem;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .form-section button {
+      background-color: #1e3a5f;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* Botão fixo */
+    .menu-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #0f2137;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      z-index: 999;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="search">
+      <input type="text" placeholder="Pesquisar..." />
+      <span>✕</span>
+    </div>
+    <nav>
+      <span>Como funciona</span>
+      <span>Para clientes</span>
+      <span>Para fornecedores</span>
+      <span>Preços</span>
+      <span>Sobre nós</span>
+    </nav>
+    <div class="icons">
+      <button class="icon-btn" aria-label="Notificações">
+        <img src="https://img.icons8.com/ios-filled/50/bell.png" alt="Notificações" />
+      </button>
+      <div class="menu-container" id="menuContainer">
+        <div class="avatar" id="avatarBtn">F</div>
+        <div class="dropdown-menu" id="dropdownMenu">
+          <div id="pagamentosPendentes">Pagamentos pendentes</div>
+          <div id="confirmarServico">Confirmação de serviços</div>
+          <div>Planos de subscrição</div>
+          <div>Suporte</div>
+          <div id="logout">Logout</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Conteúdo principal -->
+  <div class="container">
+    <div class="image-container">
+      <img src="PNG/edp.png" alt="Logo EDP">
+    </div>
+    <div class="form-section">
+      <h2>EDP <img src="PNG/blue_check.png" alt="Verificado" style="width: 16px;"></h2>
+      <strong style="font-size: 1.2rem;">€ A avaliar pelo fornecedor</strong>
+      <p>Energia segura, sustentável e inovadora ao serviço de milhões de portugueses, com presença em todo o país e compromisso com o futuro.</p>
+      
+      <label for="localizacao">Localização</label>
+      <select id="localizacao">
+        <option>Selecione localização</option>
+        <option>Aveiro</option>
+        <option>Lisboa</option>
+        <option>Porto</option>
+        <option>Coimbra</option>
+        <option>Viseu</option>
+        <option>Faro</option>
+      </select>
+
+      <button id="agendarBtn">Fazer agendamento</button>
+
+      <label for="descricao">Descrição do problema:</label>
+      <textarea id="descricao" rows="4" placeholder="Descreva o seu problema detalhadamente de forma a oferecermos o melhor serviço possível."></textarea>
+    </div>
+  </div>
+
+  <!-- Botão menu fixo -->
+  <button onclick="window.location.href='menuClientes.html'" class="menu-button">Menu</button>
+
+  <script>
+    const avatarBtn = document.getElementById('avatarBtn');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+
+    avatarBtn.addEventListener('click', () => {
+      dropdownMenu.classList.toggle('active');
+    });
+
+    window.addEventListener('click', (e) => {
+      if (!avatarBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+        dropdownMenu.classList.remove('active');
+      }
+    });
+
+    document.getElementById('pagamentosPendentes')?.addEventListener('click', () => {
+      window.location.href = 'pagamentosPendentes.html';
+    });
+
+    document.getElementById('confirmarServico')?.addEventListener('click', () => {
+      window.location.href = 'confirmarServico.html';
+    });
+
+    document.getElementById('logout')?.addEventListener('click', () => {
+      window.location.href = 'paginaInicial.html';
+    });
+
+    document.getElementById('agendarBtn').addEventListener('click', function() {
+      const cidadeSelecionada = document.getElementById('localizacao').value;
+      if (cidadeSelecionada !== 'Selecione localização') {
+        localStorage.setItem('cidade', cidadeSelecionada);
+        window.location.href = 'mapa.html';
+      } else {
+        alert('Por favor, selecione uma cidade.');
+      }
+    });
+  </script>
+</body>
+</html>
