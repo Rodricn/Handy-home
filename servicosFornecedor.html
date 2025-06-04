@@ -436,15 +436,21 @@
       }
     }
 
-    function editarServico() {
-      if (currentServiceIndex !== null) {
-        // Salvar o índice do serviço a ser editado
-        localStorage.setItem('editingServiceIndex', currentServiceIndex.toString());
-        // Redirecionar para o formulário (você precisará modificar o formulário para suportar edição)
-        alert('Funcionalidade de edição será implementada em breve. Por enquanto, você pode apagar e criar um novo serviço.');
-      }
-      closeModal();
-    }
+function editarServico() {
+  if (currentServiceIndex !== null) {
+    // Salvar o índice do serviço a ser editado
+    localStorage.setItem('editingServiceIndex', currentServiceIndex.toString());
+    
+    // Salvar os dados do serviço atual para edição
+    const servicos = JSON.parse(localStorage.getItem('servicos') || '[]');
+    const servicoParaEditar = servicos[currentServiceIndex];
+    localStorage.setItem('servicoEditando', JSON.stringify(servicoParaEditar));
+    
+    // Redirecionar para o formulário
+    window.location.href = 'formulario.html';
+  }
+  closeModal();
+}
 
     function adicionarNovoServico() {
       // Simular redirecionamento para o formulário
